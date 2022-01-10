@@ -1,3 +1,4 @@
+# load libraries
 library(tidyverse)
 library(reshape2)
 library(ggbeeswarm)
@@ -19,27 +20,27 @@ colors_grades = c(G1= "#58b873f9", G2 = "#ff9955ff", G3 = "#f0677dff", "G1/G2" =
 
 # load expression data 
 #organoids
-load("/data/gcs/lungNENomics/work/organoids/RNAseq/quantification/release2_all_03072021/Robjects/gene_1pass.SE.rda")
+load("/data/lungNENomics/work/organoids/RNAseq/quantification/release2_all_03072021/Robjects/gene_1pass.SE.rda")
 gene_1pass.SE.organoids = gene_1pass.SE
 
 #reference lung NEN data
-load("/data/gcs/lungNENomics/work/voegelec/RNASEQ/ANALYSES-2/Carcinoids-GEO-30/out_RNAseq-transcript-nf-2.2/Robjects/gene_1pass.SE.rda")
+load("/data/lungNENomics/work/voegelec/RNASEQ/ANALYSES-2/Carcinoids-GEO-30/out_RNAseq-transcript-nf-2.2/Robjects/gene_1pass.SE.rda")
 gene_1pass.SE.CarcGeo = gene_1pass.SE
-load("/data/gcs/lungNENomics/work/voegelec/RNASEQ/ANALYSES-2/Carcinoids-LCNEC-SCLC-158+52/out_RNAseq-transcript-nf-2.2/Robjects/gene_1pass.SE.rda")
+load("/data/lungNENomics/work/voegelec/RNASEQ/ANALYSES-2/Carcinoids-LCNEC-SCLC-158+52/out_RNAseq-transcript-nf-2.2/Robjects/gene_1pass.SE.rda")
 gene_1pass.SE.GigaSc  = gene_1pass.SE
 colnames(gene_1pass.SE.GigaSc)[colnames(gene_1pass.SE.GigaSc)=="S01103_T2"] = "S01103"
 colnames(gene_1pass.SE.GigaSc) = str_replace(colnames(gene_1pass.SE.GigaSc),"AB","")
-load("/data/gcs/lungNENomics/work/organoids/RNAseq/processing/SINET/quantification_SINET/Robjects/gene_1pass.SE.rda")
+load("/data/lungNENomics/work/organoids/RNAseq/processing/SINET/quantification_SINET/Robjects/gene_1pass.SE.rda")
 gene_1pass.SE.SINET  = gene_1pass.SE
-load("/data/gcs/lungNENomics/work/organoids/RNAseq/processing/SINET/quantification_SINET2_23042021/Robjects/gene_1pass.SE.rda")
+load("/data/lungNENomics/work/organoids/RNAseq/processing/SINET/quantification_SINET2_23042021/Robjects/gene_1pass.SE.rda")
 gene_1pass.SE.SINET2  = gene_1pass.SE
 
 rm(gene_1pass.SE)
 gc()
 
 #metadata
-Attributes = read.table(unzip('/data/gcs/lungNENomics/work/organoids/metadata/DRMetrics/data/Attributes.txt.zip')[1], sep = '\t', header = T)[,1:9] # Gigascience
-Attributes_organoids = read_xlsx("/data/gcs/lungNENomics/work/organoids/metadata/Data_Sharing_organoids_11062021.xlsx",sheet = 1,skip = 1)
+Attributes = read.table(unzip('/data/lungNENomics/work/organoids/metadata/DRMetrics/data/Attributes.txt.zip')[1], sep = '\t', header = T)[,1:9] # Gigascience
+Attributes_organoids = read_xlsx("/data/lungNENomics/work/organoids/metadata/Data_Sharing_organoids_11062021.xlsx",sheet = 1,skip = 1)
 
 # getting gene data 
 NEdiff.genes = c("CHGA", "NCAM1", "SYP")  # , "HES6", "DDC", "UCHL1", "CALCA" ,"GRP",) #  "NEUROG3"
@@ -144,7 +145,7 @@ traj12.3 = traject_RNA(dat=expr_genes.tib,samples=c("SINET12M","SINET12Mp1.3"),c
 traj22 = traject_RNA(dat=expr_genes.tib,samples=c("SINET22M","SINET22Mp2"),col=colors_org["SINET22"],xpos = 1+0.3,xoff=-0.02,lty="12")
 
 ## plot
-Fig3A_raw <- ggplot( expr_genes.tib %>% filter(Experiment=="Reference",Type!="SCLC",!is.na(Grade)) , aes(x=name,y=Expression,color=Experiment) ) + 
+Fig3B_raw <- ggplot( expr_genes.tib %>% filter(Experiment=="Reference",Type!="SCLC",!is.na(Grade)) , aes(x=name,y=Expression,color=Experiment) ) + 
   geom_violin(aes(x=name,y=Expression,color=NA),draw_quantiles = c(0.25,0.5,0.75), color=NA,scale = "width",fill=rgb(0.85,0.85,0.85),width=1,position=position_dodge(width=1)) + 
   #geom_quasirandom(method = "quasirandom",size=0.5,cex = 1.5,priority = "density") + 
   geom_hline(yintercept =1,linetype="dashed")+
@@ -167,7 +168,8 @@ Fig3A_raw <- ggplot( expr_genes.tib %>% filter(Experiment=="Reference",Type!="SC
                      limits = levels(droplevels(expr_genes.tib$Experiment)), 
                      labels = levels(droplevels(expr_genes.tib$Experiment)) ) #+ coord_fixed()
 
-Fig3A_raw
 
-ggsave("/data/gcs/lungNENomics/work/organoids/figures/Fig3A_raw_19112021.svg",Fig3A_raw,width = 3.8,height = 3.8*842/783)
-ggsave("/data/gcs/lungNENomics/work/organoids/figures/Fig3A_raw_19112021.png",Fig3A_raw,width = 3.8,height = 3.9*842/783)
+
+## save 
+ggsave("/data/lungNENomics/work/organoids/figures/Fig3B_raw_19112021.svg",Fig3B_raw,width = 3.8,height = 3.8*842/783)
+ggsave("/data/lungNENomics/work/organoids/figures/Fig3B_raw_19112021.png",Fig3B_raw,width = 3.8,height = 3.9*842/783)

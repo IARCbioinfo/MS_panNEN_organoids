@@ -1,7 +1,9 @@
+# load libraries
 library(maftools)
 library(VariantAnnotation)
 library(tidyverse)
 
+# create sample and passage data frames
 samplesTime = as.data.frame(matrix(c("LNET2T","LNET2Tp12",NA,
                                      "LNET5T",	"LNET5Tp4",NA,
                                      "LNET6T",	"LNET6Tp1",NA,
@@ -73,8 +75,8 @@ sampleOrderRNA = c("SINET21M",	"SINET21Mp2",
                 )
 
 ## convert annovar to maf
-annovar_org = list.files("/data/gcs/lungNENomics/work/organoids/WGS/variant_calling/release3_25102021/",pattern=".vcf.gz$",full.names = T)
-annovar_org.names = str_remove( list.files("/data/gcs/lungNENomics/work/organoids/WGS/variant_calling/release3_25102021/",pattern=".vcf.gz$"), 
+annovar_org = list.files("/data/lungNENomics/work/organoids/WGS/variant_calling/release3_25102021/",pattern=".vcf.gz$",full.names = T)
+annovar_org.names = str_remove( list.files("/data/lungNENomics/work/organoids/WGS/variant_calling/release3_25102021/",pattern=".vcf.gz$"), 
                                 "_final.vcf.gz")
 
 # create MAF file
@@ -157,13 +159,14 @@ annovar_values = c(exonic = "RNA", splicing = "Splice_Site",
 
 all(vcf.tib.long$ExonicFunc.ensGene[vcf.tib.long$ExonicFunc.ensGene!="."] %in% names(annovar_values))
 
-write_tsv(alt_summary , file = "/data/gcs/lungNENomics/work/organoids/WGS/variant_calling/release3_25102021/mutations_venn.tsv")
-write_tsv(vcf.tib.long , file = "/data/gcs/lungNENomics/work/organoids/WGS/variant_calling/release3_25102021/multisample_annovar.maf")
+write_tsv(alt_summary , file = "/data/lungNENomics/work/organoids/WGS/variant_calling/release3_25102021/mutations_venn.tsv")
+write_tsv(vcf.tib.long , file = "/data/lungNENomics/work/organoids/WGS/variant_calling/release3_25102021/multisample_annovar.maf")
 
 cbind(alt_summary$Experiment , 1 - alt_summary$P / (rowSums(alt_summary[,c(1:3)]) + alt_summary$P ))
 
-# load file
-organoids_somatic = annovarToMaf(annovar = "/data/gcs/lungNENomics/work/organoids/WGS/variant_calling/release3_25102021/multisample_annovar.maf", 
+# Figure 4B
+# load MAF file
+organoids_somatic = annovarToMaf(annovar = "/data/lungNENomics/work/organoids/WGS/variant_calling/release3_25102021/multisample_annovar.maf", 
                                  Center = 'Utrecht', refBuild = 'hg38', tsbCol = 'Sample', table = 'ensGene',MAFobj = TRUE,ens2hugo = FALSE,)
 
 ## test if all in exonic
@@ -172,7 +175,6 @@ organoids_somatic@data %>% filter( ExonicFunc.refGene=="." )
 table(organoids_somatic@maf.silent$ExonicFunc.refGene, organoids_somatic@maf.silent$Variant_Classification)
 organoids_somatic@maf.silent %>% filter( !ExonicFunc.refGene %in% c(".","synonymous SNV") )
 ### OK
-plotmafSummary(organoids_somatic)
 
 ## add SVs
 maf.data = organoids_somatic@data
@@ -196,9 +198,9 @@ maf.data = maf.data %>% mutate(damaging = case_when(as.numeric(REVEL)>=0.5 | Var
                                          as.numeric(REVEL)<0.5 | Variant_Classification !="Missense_Mutation" ~"MAYBE",
                                          TRUE~"NO") )
 
-write_tsv( maf.data ,file = "/data/gcs/lungNENomics/work/organoids/WGS/variant_calling/release3_25102021/multisample_annovar_wSV.maf"  )
+write_tsv( maf.data ,file = "/data/lungNENomics/work/organoids/WGS/variant_calling/release3_25102021/multisample_annovar_wSV.maf"  )
 
-organoids_somatic2 = read.maf("/data/gcs/lungNENomics/work/organoids/WGS/variant_calling/release3_25102021/multisample_annovar_wSV.maf" ,
+organoids_somatic2 = read.maf("/data/lungNENomics/work/organoids/WGS/variant_calling/release3_25102021/multisample_annovar_wSV.maf" ,
                               vc_nonSyn = c("Frame_Shift_Del", "Frame_Shift_Ins", "Splice_Site", "Translation_Start_Site","Nonsense_Mutation", "Nonstop_Mutation", 
                                             "In_Frame_Del","In_Frame_Ins", "Missense_Mutation","INV","TRA","DEL","DUP"))
                                  
@@ -227,7 +229,7 @@ vc_col["Missense_Mutation"] = "#1f78b4ff"
 vc_col["Frame_Shift_Del"] = "#782121ff"
 vc_col["Frame_Shift_Ins"] = "#2ca089ff"
 
-pdf("/data/gcs/lungNENomics/work/organoids/figures/Fig4B_raw_17122021.pdf",h=10.5,w=6.5)
+pdf("/data/lungNENomics/work/organoids/figures/Fig4B_raw_17122021.pdf",h=10.5,w=6.5)
 oncoplot(maf = organoids_somatic2.dam, showTumorSampleBarcodes = T, barcode_mar = 6, drawRowBar = F,drawColBar = F,  showTitle = F,
          #additionalFeature = c("dam_pred075",TRUE), 
          leftBarData = tabgenes[!duplicated(tabgenes$Hugo_Symbol),c(1,6)], 
@@ -241,11 +243,11 @@ oncoplot(maf = organoids_somatic2.dam, showTumorSampleBarcodes = T, barcode_mar 
 dev.off()
 
 # write data
-write_tsv( organoids_somatic2@data ,path = "Fig4D_draft_data_16042021.tsv" )
+write_tsv( organoids_somatic2@data ,path = "Fig4B_draft_data_16042021.tsv" )
 
-## B: RNAseq oncoplot panel
-annovar_org_RNA = list.files("/data/gcs/lungNENomics/work/organoids/integration/Tonly_RNAseq_vcf_drivers_normalized_annotated/",pattern=".vcf.gz$",full.names = T)
-annovar_org_RNA.names = str_remove( list.files("/data/gcs/lungNENomics/work/organoids/integration/Tonly_RNAseq_vcf_drivers_normalized_annotated/",pattern=".vcf.gz$"), 
+## C: RNAseq oncoplot panel
+annovar_org_RNA = list.files("/data/lungNENomics/work/organoids/integration/Tonly_RNAseq_vcf_drivers_normalized_annotated/",pattern=".vcf.gz$",full.names = T)
+annovar_org_RNA.names = str_remove( list.files("/data/lungNENomics/work/organoids/integration/Tonly_RNAseq_vcf_drivers_normalized_annotated/",pattern=".vcf.gz$"), 
                                 "_calls_driverRegions_norm.vcf.hg38_multianno.vcf.gz")
 
 # create MAF file
@@ -365,13 +367,13 @@ vcfRNA.tib.long%>% filter(Gene.ensGene=="STK11", !ExonicFunc.ensGene %in% c("syn
                           ExAC_nontcga_ALL<=0.01 , `1000g2015aug_all`<=0.01 , REVEL>=0.5 |ExonicFunc.ensGene!="nonsynonymous SNV" )  %>% 
   dplyr::select(Start,Ref,Alt,ExonicFunc.ensGene,REVEL,cosmic92_coding,Sample,AD,DP,VAF)
 
-write_tsv(alt_summary_RNA , file = "/data/gcs/lungNENomics/work/organoids/integration/mutations_venn_RNA.tsv")
-write_tsv(vcfRNA.tib.long , file = "/data/gcs/lungNENomics/work/organoids/integration/multisample_annovar_RNA.maf")
+write_tsv(alt_summary_RNA , file = "/data/lungNENomics/work/organoids/integration/mutations_venn_RNA.tsv")
+write_tsv(vcfRNA.tib.long , file = "/data/lungNENomics/work/organoids/integration/multisample_annovar_RNA.maf")
 
 cbind(alt_summary_RNA$Experiment , 1 - alt_summary_RNA$P / (rowSums(alt_summary_RNA[,c(1:4,6:8)]) + alt_summary_RNA$P ))
 
 # load file
-organoids_somaticRNA = annovarToMaf(annovar = "/data/gcs/lungNENomics/work/organoids/integration/multisample_annovar_RNA.maf", 
+organoids_somaticRNA = annovarToMaf(annovar = "/data/lungNENomics/work/organoids/integration/multisample_annovar_RNA.maf", 
                                  Center = 'Utrecht', refBuild = 'hg38', tsbCol = 'Sample', table = 'ensGene',MAFobj = TRUE,ens2hugo = FALSE,)
 
 ## test if all in exonic
@@ -386,7 +388,7 @@ plotmafSummary(organoids_somaticRNA)
 mafRNA = organoids_somaticRNA@data %>% filter(Variant_Classification!="Splice_Site" )
 mafRNA$Variant_Classification = as.character(mafRNA$Variant_Classification)
 mafRNA$Variant_Classification[mafRNA$AD==-1] = "No_Coverage"
-write_tsv(  mafRNA ,file = "/data/gcs/lungNENomics/work/organoids/integration/multisample_annovar_RNA2.maf"  )
+write_tsv(  mafRNA ,file = "/data/lungNENomics/work/organoids/integration/multisample_annovar_RNA2.maf"  )
 
 
 ## add fusions # to do
@@ -411,10 +413,10 @@ maf.data = maf.data %>% mutate(damaging = case_when(as.numeric(REVEL)>=0.5 | Var
                                                     as.numeric(REVEL)<0.5 | Variant_Classification !="Missense_Mutation" ~"MAYBE",
                                                     TRUE~"NO") )
 
-write_tsv( maf.data ,file = "/data/gcs/lungNENomics/work/organoids/WGS/variant_calling/release3_25102021/multisample_annovar_wSV.maf"  )
+write_tsv( maf.data ,file = "/data/lungNENomics/work/organoids/WGS/variant_calling/release3_25102021/multisample_annovar_wSV.maf"  )
 
 # read maf
-organoids_somaticRNA2 = read.maf("/data/gcs/lungNENomics/work/organoids/integration/multisample_annovar_RNA2.maf" ,
+organoids_somaticRNA2 = read.maf("/data/lungNENomics/work/organoids/integration/multisample_annovar_RNA2.maf" ,
                               vc_nonSyn = c("Frame_Shift_Del", "Frame_Shift_Ins", "Splice_Site", "Translation_Start_Site","Nonsense_Mutation", "Nonstop_Mutation", 
                                             "In_Frame_Del","In_Frame_Ins", "Missense_Mutation","No_Coverage"))
 
@@ -448,7 +450,7 @@ vc_col["Missense_Mutation"] = "#1f78b4ff"
 vc_col["Frame_Shift_Del"] = "#782121ff"
 vc_col["Frame_Shift_Ins"] = "#2ca089ff"
 
-pdf("/data/gcs/lungNENomics/work/organoids/figures/FigS4C_raw_18122021.pdf",h=12,w=8)
+pdf("/data/lungNENomics/work/organoids/figures/FigS4C_raw_18122021.pdf",h=12,w=8)
 oncoplot(maf = organoids_somaticRNA2sub, showTumorSampleBarcodes = T, barcode_mar = 6, drawRowBar = F,drawColBar = F,  showTitle = F,
          #additionalFeature = c("dam_pred075",TRUE), 
          leftBarData = tabgenesRNA[!duplicated(tabgenesRNA$Hugo_Symbol),c(1,6)], 
@@ -461,7 +463,7 @@ oncoplot(maf = organoids_somaticRNA2sub, showTumorSampleBarcodes = T, barcode_ma
          bgCol = "#fef8e4ff")
 dev.off()
 
-pdf("/data/gcs/lungNENomics/work/organoids/figures/Fig4C_raw_18122021.pdf",h=12,w=8)
+pdf("/data/lungNENomics/work/organoids/figures/Fig4C_raw_18122021.pdf",h=12,w=8)
 oncoplot(maf = organoids_somaticRNA2sub, showTumorSampleBarcodes = T, barcode_mar = 6, drawRowBar = F,drawColBar = F,  showTitle = F,
          #additionalFeature = c("dam_pred075",TRUE), 
          leftBarData = tabgenesRNA[!duplicated(tabgenesRNA$Hugo_Symbol),c(1,6)], 
@@ -476,54 +478,11 @@ dev.off()
 
 
 # write data
-write_tsv( organoids_somatic2.dam@data ,path = "/data/gcs/lungNENomics/work/organoids/figures/Fig4B_draft_data_18122021.tsv" )
-write_tsv( organoids_somaticRNA2sub@data ,path = "/data/gcs/lungNENomics/work/organoids/figures/FigS4B_draft_data_18122021.tsv" )
+write_tsv( organoids_somatic2.dam@data ,path = "/data/lungNENomics/work/organoids/figures/Fig4C_draft_data_18122021.tsv" )
+write_tsv( organoids_somaticRNA2sub@data ,path = "/data/lungNENomics/work/organoids/figures/FigS4C_draft_data_18122021.tsv" )
 
 
 #######  S figs
-# old
-if(!file.exist("/data/gcs/lungNENomics/work/organoids/WGS/variant_calling/release2.1_25022021/somatic/mutect2_somatic_organoids_normalized_annotated_25022021/multisample_annovar.txt")){}
-annovar_org_tsvl = lapply( annovar_org , read_tsv )
-sample_order = read_tsv("/run/user/1000/gvfs/smb-share:server=shares.hpc.iarc.lan,share=data/gcs/lungNENomics/work/organoids/WGS/variant_calling/release2.1_25022021/somatic/mutect2_somatic_organoids_normalized_annotated_25022021/sample_order.tsv",col_names = paste0("Sample",1:4))
-sample_order$Experiment = str_remove(sample_order$Sample1,"[NM][a-z]*[0-9]*$")
-
-for(i in 1:length(annovar_org_tsvl)){
-  annovar_org_tsvl.all_tmp = c()
-  for(j in 1:sum(!is.na(sample_order[i,]))){
-    if(str_detect(sample_order[i,j],"N$|Np[0-9]+$")) next()
-    annovar_org_tsvl.tmp = annovar_org_tsvl[[i]]
-    annovar_org_tsvl.tmp$Tumor_Sample_Barcode = as.character(sample_order[i,j])
-    AD = as.numeric( apply(annovar_org_tsvl.tmp[,paste0("Otherinfo",12+j)],1, function(x) str_split(str_split(x  , ":")[[1]][2],",")[[1]][2] ) )
-    RD = as.numeric( apply(annovar_org_tsvl.tmp[,paste0("Otherinfo",12+j)],1, function(x) str_split(str_split(x  , ":")[[1]][2],",")[[1]][1] ) )
-    annovar_org_tsvl.tmp$AD = AD
-    annovar_org_tsvl.tmp$RD = RD
-    annovar_org_tsvl.tmp$VAF = AD/(AD+RD)
-    annovar_org_tsvl.tmp = annovar_org_tsvl.tmp[AD>0,]
-    annovar_org_tsvl.all_tmp = bind_rows(annovar_org_tsvl.all_tmp,annovar_org_tsvl.tmp)
-  }
-  annovar_org_tsvl[[i]] = annovar_org_tsvl.all_tmp
-}
-write_tsv( bind_rows(annovar_org_tsvl) %>% dplyr::select(-(Otherinfo1:Otherinfo12), - (PVS1:BP7), -(AF:controls_AF_popmax_1) )  , 
-           "/run/user/1000/gvfs/smb-share:server=shares.hpc.iarc.lan,share=data/gcs/lungNENomics/work/organoids/WGS/variant_calling/release2.1_25022021/somatic/mutect2_somatic_organoids_normalized_annotated_25022021/multisample_annovar.txt" )
-}
-
-organoids_somatic = annovarToMaf(annovar = "/run/user/1000/gvfs/smb-share:server=shares.hpc.iarc.lan,share=data/gcs/lungNENomics/work/organoids/WGS/variant_calling/release2.1_25022021/somatic/mutect2_somatic_organoids_normalized_annotated_25022021/multisample_annovar.txt", 
-                                 Center = 'Utrecht', refBuild = 'hg38', tsbCol = 'Tumor_Sample_Barcode', table = 'ensGene',MAFobj = TRUE,ens2hugo = FALSE)
-
-organoids_somatic@data$dam_pred = as.numeric(organoids_somatic@data$REVEL)>=0.5 | str_detect(organoids_somatic@data$Variant_Classification,"Del|Ins|Nonsense|Nonstop|Splice|Start") #organoids_somatic@data$LRT_pred=="D" | organoids_somatic@data$MutationTaster_pred %in% c("A","D") | organoids_somatic@data$SIFT_pred =="D" | str_detect(organoids_somatic@data$Variant_Classification,"Frame")
-organoids_somatic@data$dam_pred[is.na(organoids_somatic@data$dam_pred)] = FALSE
-organoids_somatic@maf.silent$dam_pred = as.numeric(organoids_somatic@maf.silent$REVEL)>=0.5 | str_detect(organoids_somatic@maf.silent$Variant_Classification,"Del|Ins|Nonsense|Nonstop|Splice|Start")  #organoids_somatic@maf.silent$LRT_pred=="D" | organoids_somatic@maf.silent$MutationTaster_pred %in% c("A","D") |  organoids_somatic@maf.silent$SIFT_pred =="D" | str_detect(organoids_somatic@maf.silent$Variant_Classification,"Frame")
-organoids_somatic@maf.silent$dam_pred[is.na(organoids_somatic@maf.silent$dam_pred)] = FALSE
-
-organoids_somatic@data$dam_pred075 = as.numeric(organoids_somatic@data$REVEL)>=0.75 | str_detect(organoids_somatic@data$Variant_Classification,"Del|Ins|Nonsense|Nonstop|Splice|Start") #organoids_somatic@data$LRT_pred=="D" | organoids_somatic@data$MutationTaster_pred %in% c("A","D") | organoids_somatic@data$SIFT_pred =="D" | str_detect(organoids_somatic@data$Variant_Classification,"Frame")
-organoids_somatic@data$dam_pred075[is.na(organoids_somatic@data$dam_pred)] = FALSE
-organoids_somatic@maf.silent$dam_pred075 = as.numeric(organoids_somatic@maf.silent$REVEL)>=0.75 | str_detect(organoids_somatic@maf.silent$Variant_Classification,"Del|Ins|Nonsense|Nonstop|Splice|Start")  #organoids_somatic@maf.silent$LRT_pred=="D" | organoids_somatic@maf.silent$MutationTaster_pred %in% c("A","D") |  organoids_somatic@maf.silent$SIFT_pred =="D" | str_detect(organoids_somatic@maf.silent$Variant_Classification,"Frame")
-organoids_somatic@maf.silent$dam_pred075[is.na(organoids_somatic@maf.silent$dam_pred)] = FALSE
-
-# get annotation for gencode v33
-txdb33 = loadDb("gencodev33.sqlite")
-
-
 # corrected TMB
 predcod_exonic.Allgenes.longmat <- predcod_exonic2 %>% 
   group_by(Sample,QUERYID) %>% count(var_predict,variant_class) %>% dplyr::slice(which(n==max(n)) ) %>% 
@@ -532,13 +491,13 @@ predcod_exonic.Allgenes.longmat <- predcod_exonic2 %>%
 TMBnew = predcod_exonic.Allgenes.longmat %>% filter(var_predict!="Silent") %>% group_by(Sample) %>% count()
 
 # load cosmic genes
-cosmic_genes = read_xlsx("/run/user/1000/gvfs/smb-share:server=shares.hpc.iarc.lan,share=data/gcs/mesomics/work/mangiantel/DataBases/COSMIC_cancer_genes_v90.xlsx")
-cosmic_hallmarks = read_xlsx("/run/user/1000/gvfs/smb-share:server=shares.hpc.iarc.lan,share=data/gcs/mesomics/work/mangiantel/DataBases/COSMIC_cancer_genes_v90.xlsx",sheet = 2,skip = 17)
-cosmic_hallmarks_head = read_xlsx("/run/user/1000/gvfs/smb-share:server=shares.hpc.iarc.lan,share=data/gcs/mesomics/work/mangiantel/DataBases/COSMIC_cancer_genes_v90.xlsx",sheet = 2,n_max = 12,skip=3)
+cosmic_genes = read_xlsx("/run/user/1000/gvfs/smb-share:server=shares.hpc.iarc.lan,share=data/mesomics/work/mangiantel/DataBases/COSMIC_cancer_genes_v90.xlsx")
+cosmic_hallmarks = read_xlsx("/run/user/1000/gvfs/smb-share:server=shares.hpc.iarc.lan,share=data/mesomics/work/mangiantel/DataBases/COSMIC_cancer_genes_v90.xlsx",sheet = 2,skip = 17)
+cosmic_hallmarks_head = read_xlsx("/run/user/1000/gvfs/smb-share:server=shares.hpc.iarc.lan,share=data/mesomics/work/mangiantel/DataBases/COSMIC_cancer_genes_v90.xlsx",sheet = 2,n_max = 12,skip=3)
 
 cosmic_gene_list = unlist(sapply(cosmic_genes$Synonyms,strsplit,","))
 
-# Fig. 4A mutation load
+#  mutation load
 source("TMB_compare2.R")
 MAF.list = list( #subsetMaf( organoids_somatic,tsb = grep("LNET2T",levels(organoids_somatic@data$Tumor_Sample_Barcode),value = T),ranges = ss50.hg38 ),
   subsetMaf( organoids_somatic,tsb = grep("LNET6",levels(organoids_somatic@data$Tumor_Sample_Barcode),value = T),ranges = ss50.hg38 ),
@@ -597,7 +556,7 @@ traject_RNA_head <- function(dat=expr_genes_NET,samples,col=colors_org[3],xpos=c
              aes(x =  c(xpos,xpos+xoff), y = value), size=2,stroke=1,colour = col,fill=rep(fills,each=length(xpos)),shape=21,inherit.aes = T)
 }
 
-Fig4A <- ggplot( TMB.dat,aes(x=Tumor_Sample_Barcode,y=total/35.8,col=Exp)) +
+FigS4A <- ggplot( TMB.dat,aes(x=Tumor_Sample_Barcode,y=total/35.8,col=Exp)) +
   geom_rect(data = tp,aes(fill = val),xmin = -Inf,xmax = Inf,ymin = -Inf,ymax = Inf,alpha = 0.5,inherit.aes = F,show.legend = F) +
   scale_fill_manual(values = c("white", "#ffe6d5ff"))+ #new_scale_color() +
   geom_point(size=0.7) + scale_color_manual(values = c(Reference="gray76",colors_org_WGS[-2]), limits = c("Reference",names(colors_org_WGS[-2])))+
@@ -621,20 +580,4 @@ ggsave("Fig4A_raw_01032021.png",Fig4A,height = 3,width = 3*2)
 ggsave("Fig4A_raw_01032021.pdf",Fig4A,height = 3,width = 3*2)
 
 write_tsv(Fig4A$data, "Fig4A_draft_data_01032021.tsv")
-
-
-########   SVs  #############
-
-sampleOrder = c(#"LNET2T","LNET2Tp12",#"LNET2Np12",
-  #"LNET5T",	"LNET5Tp4",
-  "LNET6T",	"LNET6Tp1",
-  "LNET10T",	"LNET10Tp4",
-  "LCNEC3T","LCNEC3Tp17",
-  "LCNEC4T",	"LCNEC4Tp7", "LCNEC4Tp24",	
-  "PANEC1T","PANEC1Tp4","PANEC1Tp14",
-  "SINET7M",	"SINET7Mp2",
-  "SINET8M",	"SINET8Mp2",
-  "SINET9M",	"SINET9Mp1")
-
-organoids_somatic.subset = subsetMaf(organoids_somatic,tsb = sampleOrder,query = "dam_pred==TRUE" )#,query = "dam_pred==TRUE")
 

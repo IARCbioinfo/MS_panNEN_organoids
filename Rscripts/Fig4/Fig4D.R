@@ -1,3 +1,4 @@
+# load librairies
 library(tidyverse)
 library(ggpubr)
 library(AnnotationDbi)
@@ -18,9 +19,9 @@ colors_org = c(LNET2="#aade87ff",LNET6="#5fd38dff",LNET13="#16502dff",LNET14="#6
 # metadata
 require(readxl)
 require(tidyverse)
-mutated_gene_list1 = read_xlsx("/data/gcs/lungNENomics/work/organoids/metadata/Lung NEN and SI NEN mutated genes_16Oct2020.xlsx",sheet = 1)
+mutated_gene_list1 = read_xlsx("/data/lungNENomics/work/organoids/metadata/Lung NEN and SI NEN mutated genes_16Oct2020.xlsx",sheet = 1)
 mutated_gene_list1$Type = "LNEN"
-mutated_gene_list2 = read_xlsx("/data/gcs/lungNENomics/work/organoids/metadata/Lung NEN and SI NEN mutated genes_16Oct2020.xlsx",sheet = 2)
+mutated_gene_list2 = read_xlsx("/data/lungNENomics/work/organoids/metadata/Lung NEN and SI NEN mutated genes_16Oct2020.xlsx",sheet = 2)
 mutated_gene_list2$Type = "SI"
 
 mutated_gene_list1$`gene name`[mutated_gene_list1$`gene name`=="DICER"] = "DICER1"
@@ -64,20 +65,20 @@ mutated_gene_listB = mutated_gene_list %>% dplyr::select(`gene name`,Type) %>% m
 mutated_gene_listB$`gene name`[mutated_gene_listB$`gene name`=="HSP90A"] = "HSP90AA1"
 mutated_gene_listB$`gene name`[mutated_gene_listB$`gene name`=="HIST1H2AC"] = "H2AC6"
 
-# Fig. 4C : CNV + SV profiles
-CNVsummary = read_tsv("/data/gcs/lungNENomics/work/organoids/WGS/CNV_calling/release2_PURPLE_multisample_05072021/purple_summary.txt" )
+# Fig. 4D : CNV + SV profiles
+CNVsummary = read_tsv("/data/lungNENomics/work/organoids/WGS/CNV_calling/release2_PURPLE_multisample_05072021/purple_summary.txt" )
 CNVsummary = CNVsummary %>% mutate(experiment =str_remove(tumor_id,"[TMN][p0-9.]*$"))
 
 ## sup figure with purities and ploidies
 FigS4C_A <- ggplot(CNVsummary , aes(x=ploidy,y=purity,col=experiment) ) + geom_point() + 
   geom_point(data = CNVsummary %>% filter(str_detect(tumor_id,"p")) , pch=16 , col="white",size=0.6 ) + scale_color_manual(values = colors_org[CNVsummary$experiment], drop = TRUE) + 
   geom_hline(yintercept = 0.5, linetype="dashed")  + theme_organoids + xlab("Ploidy") + ylab("Purity")
-ggsave("/data/gcs/lungNENomics/work/organoids/figures/FigS4C_raw_26112021.svg",FigS4C_A, height = 3,width = 4)
+ggsave("/data/lungNENomics/work/organoids/figures/FigS4C_raw_26112021.svg",FigS4C_A, height = 3,width = 4)
 
 
-CNVfiles = list.files("/data/gcs/lungNENomics/work/organoids/WGS/CNV_calling/release2_PURPLE_multisample_05072021/PURPLE/", recursive = T , 
+CNVfiles = list.files("/data/lungNENomics/work/organoids/WGS/CNV_calling/release2_PURPLE_multisample_05072021/PURPLE/", recursive = T , 
                       pattern="purple.cnv.somatic.tsv",full.names = T)
-CNVnames = gsub("[A-Z]+[0-9]+[NMT][p0-9.]*_PURPLE/|.purple.cnv.somatic.tsv","", list.files("/data/gcs/lungNENomics/work/organoids/WGS/CNV_calling/release2_PURPLE_multisample_05072021/PURPLE/", recursive = T , 
+CNVnames = gsub("[A-Z]+[0-9]+[NMT][p0-9.]*_PURPLE/|.purple.cnv.somatic.tsv","", list.files("/data/lungNENomics/work/organoids/WGS/CNV_calling/release2_PURPLE_multisample_05072021/PURPLE/", recursive = T , 
                                                          pattern="purple.cnv.somatic.tsv" ) )
 
 CNVl = lapply(CNVfiles, read_tsv )
@@ -97,10 +98,6 @@ names(CNV_GR) = CNVnames
 
 for(i in 1:length(CNVl)) names(CNV_GR[[i]]) = paste0(CNVl[[i]]$Chromosome,":",CNVl[[i]]$start,"-",CNVl[[i]]$end)
 
-#require(CopyNumberPlots)
-#plot.params <- getDefaultPlotParams(plot.type=4)
-#plot.params$leftmargin=0.1
-
 sampleOrderAll = c("LNET2T","LNET2Tp12","LNET2Np12",
   "LNET5T",	"LNET5Tp4",
   "LNET6T",	"LNET6Tp1",
@@ -112,27 +109,18 @@ sampleOrderAll = c("LNET2T","LNET2Tp12","LNET2Np12",
   "SINET8M",	"SINET8Mp2",
   "SINET9M",	"SINET9Mp1")
 
-#svg("Fig4B_CNV_11022021.svg",h=6,w=6*2.5)
-#kp <- plotKaryotype(plot.type = 4,genome = "hg38" ,plot.params = plot.params)
-#plotCopyNumberCalls(kp, cn.calls = CNV_GR[sampleOrderAll],r0=0,r1=1,loh.height = 0.2,cn.colors = "red_blue",loh.color = "red")
-#cn.cols <- getCopyNumberColors(colors = "red_blue")
-#legend("bottom", legend=names(cn.cols), fill = cn.cols, ncol=length(cn.cols),bty = "n")
-#dev.off()
 
-Data_Fig4c = bind_rows( lapply(1:length(sampleOrderAll),function(i){ 
+Data_Fig4D = bind_rows( lapply(1:length(sampleOrderAll),function(i){ 
   res=as.data.frame(CNV_GR[sampleOrderAll[i]])
   colnames(res)=c("seqnames","start","end","width","strand","cn","loh","minor_CN")
   res$Sample=sampleOrderAll[i];return(res)} ) )
 
-write_tsv(Data_Fig4c,path = "Fig4c_draft_data_9122021.tsv")
+write_tsv(Data_Fig4D,path = "Fig4D_draft_data_9122021.tsv")
 
 # get gene info
-#txdb33 = loadDb("/data/gcs/lungNENomics/work/organoids/references/GRCh38_gencode_v33_CTAT_lib_Apr062020.plug-n-play/gencodev33.sqlite")
-#cdstmp  = cdsBy(txdb33, by="tx", use.names=TRUE)
-gene_spans = read_tsv("/data/gcs/lungNENomics/work/organoids/references/GRCh38_gencode_v33_CTAT_lib_Apr062020.plug-n-play/ctat_genome_lib_build_dir/ref_annot.gtf.gene_spans",
+gene_spans = read_tsv("/data/lungNENomics/work/organoids/references/GRCh38_gencode_v33_CTAT_lib_Apr062020.plug-n-play/ctat_genome_lib_build_dir/ref_annot.gtf.gene_spans",
                       col_names = c("ENSG","chr","start","end","strand","symbol","type") )
-#cdstmp.g  = transcriptsBy(txdb33, by="gene")
-load("/data/gcs/lungNENomics/work/organoids/RNAseq/quantification/release2_all_03072021/Robjects/transcript_1pass.SE.rda")
+load("/data/lungNENomics/work/organoids/RNAseq/quantification/release2_all_03072021/Robjects/transcript_1pass.SE.rda")
 
 ## cross tx with CNV data
 CNV_GR.S = CNV_GR
@@ -158,76 +146,8 @@ for(i in 1:length(CNVnames)){
 ##
 bind_rows(CNVl) %>% dplyr::select( Sample, chromosome, start, end, bafCount , copyNumber )  %>% write_tsv(path=paste0("CNV_tsv_all.tsv"))
 
-load("/data/gcs/lungNENomics/work/organoids/WGS/SV_calling/release2_sv-somatic-cns-nf_02112021/SURVIVOR/SV_uniq_recovered.Rdata")
+load("/data/lungNENomics/work/organoids/WGS/SV_calling/release2_sv-somatic-cns-nf_02112021/SURVIVOR/SV_uniq_recovered.Rdata")
 
-#plotCBSsegments(cbsFile = "CNV_tsv_all.tsv" ,tsb = "PANEC1T",maf = organoids_somatic,ref.build = "hg38", genes= tabgenes$Hugo_Symbol )
-#plotCBSsegments(cbsFile = "CNV_tsv_LCNEC3Tp17.tsv",maf = organoids_somatic )
-#plotCBSsegments(cbsFile = "CNV_tsv_LCNEC4T.tsv" )
-#plotCBSsegments(cbsFile = "CNV_tsv_LCNEC4Tp7.tsv" )
-#plotCBSsegments(cbsFile = "CNV_tsv_LCNEC4Tp24.tsv" )
-#write_tsv( cbind(organoids_somatic@data) , path = "organoids_coding.maf")
-#organoids_somatic_coding_CNV = read.maf("organoids_coding.maf",cnTable = CNVmaf)
-
-#svg("Fig4D_CNV_raw_10112020.svg",h=8,w=5.5)
-#oncoplot(maf = organoids_somatic_coding_CNV, showTumorSampleBarcodes = T, barcode_mar = 6, drawRowBar = F,drawColBar = F,  top=100, showTitle = F,
-#         additionalFeature = c("dam_pred",TRUE), 
-#         leftBarData = tabgenes[,c(1,4)], 
-#         sampleOrder = sampleOrder,
-#         genes = tabgenes$Hugo_Symbol, keepGeneOrder = TRUE,
-#         removeNonMutated = FALSE)
-#dev.off()
-
-# Fig. 4C 
-# read vcfs
-#vcf.SV.files        = list.files("/data/gcs/lungNENomics/work/organoids/WGS/SV_calling/release2_sv-somatic-cns-nf_02112021/SURVIVOR/",pattern = "cns.integration.vcf",full.names = T)
-#vcf.SV.names        = str_remove(list.files("/data/gcs/lungNENomics/work/organoids/WGS/SV_calling/release2_sv-somatic-cns-nf_02112021/SURVIVOR/",pattern = "cns.integration.vcf",full.names = F),
-                                 #".cns.integration.vcf")
-#vcf.bigIndels.files = list.files("/run/user/1000/gvfs/smb-share:server=shares.hpc.iarc.lan,share=data/gcs/lungNENomics/work/organoids/WGS/processing/SV_calling_organoids_01092020/",pattern = "somatic_run.svaba.somatic.indel*_annotated.vcf",full.names = T)
-#vcf.bigIndels.names = str_remove(list.files("/run/user/1000/gvfs/smb-share:server=shares.hpc.iarc.lan,share=data/gcs/lungNENomics/work/organoids/WGS/processing/SV_calling_organoids_01092020/",pattern = "somatic_run.svaba.somatic.indel_annotated.vcf",full.names = F),
-                                 #".somatic_run.svaba.somatic.indel_annotated.vcf")
-#vcf.SVl = lapply(vcf.SV.files, read_tsv,comment = "#", col_names = c("CHROM",	"POS",	"ID",	"REF",	"ALT",	"QUAL",	"FILTER",	"INFO",	"FORMAT","normal",	"tumor","file"))
-#vcf.bigIndelsl = lapply(vcf.bigIndels.files, read_tsv)
-
-#for(i in 1:length(vcf.SVl)){
-#  vcf.SVl[[i]]$Sample            = vcf.SV.names[i]
-#  vcf.SVl[[i]]$Experiment        = str_remove(vcf.SV.names,"Tp[0-9]*$|Mp[0-9]$|T$|M$")[i]
-#  vcf.SVl[[i]]$QUAL              = as.numeric(vcf.SVl[[i]]$QUAL)
-  #vcf.bigIndelsl[[i]]$Sample     = vcf.bigIndels.names[i]
-  #vcf.bigIndelsl[[i]]$Experiment = str_remove(vcf.SV.names,"Tp[0-9]*$|Mp[0-9]$|T$|M$")[i]
-#}
-#vcf.SVl = bind_rows(vcf.SVl)
-#vcf.SVl.GR = GRanges(seqnames = vcf.SVl$CHROM, ranges = IRanges(start = vcf.SVl$POS , end = vcf.SVl$POS) , Sample =vcf.SVl$Sample , Experiment = vcf.SVl$Experiment)
-
-#mutated_gene_list = gene_spans %>% filter(symbol %in% mutated_gene_listB$`gene name`) #rowRanges(gene_1pass.SE.organoids)[which(rowData(gene_1pass.SE.organoids)$gene_name %in% mutated_gene_listB$`gene name`)] # cdstmp.g[gene_spans[gene_spans$symbol %in% mutated_gene_listB$`gene name`,]$ENSG]
-#mutated_gene_list = GRanges(seqnames = mutated_gene_list$chr , ranges = IRanges(start = mutated_gene_list$start, end = mutated_gene_list$end) , strand =  mutated_gene_list$strand,
-#                            symbol = mutated_gene_list$symbol , type = mutated_gene_list$type)
-
-#OV = findOverlaps(vcf.SVl.GR,mutated_gene_list)
-
-#vcf.SVl.GR$Symbol=NA
-#vcf.SVl.GR$Symbol[queryHits(OV)] = mutated_gene_list$symbol[subjectHits(OV)]
-
-#vcf.SVl.GR[!is.na(vcf.SVl.GR$Symbol),]
-
-#vcf.bigIndelsl = bind_rows(vcf.bigIndelsl)
-#vcf.bigIndelsl = vcf.bigIndelsl %>% mutate(id=as.character(id))
-# prefilter
-#find_in_multiple.SV = sapply(1:nrow(vcf.SVl), function(i) vcf.SVl$geneSymbol[i] %in% 
-#                               vcf.SVl$geneSymbol[!is.na(vcf.SVl$geneSymbol)&vcf.SVl$Experiment==vcf.SVl$Experiment[i]&vcf.SVl$Sample!=vcf.SVl$Sample[i]]  )
-#find_in_multiple.bI = sapply(1:nrow(vcf.bigIndelsl), function(i) vcf.bigIndelsl$geneSymbol[i] %in% 
-#                               vcf.bigIndelsl$geneSymbol[!is.na(vcf.bigIndelsl$geneSymbol)&vcf.bigIndelsl$Experiment==vcf.bigIndelsl$Experiment[i]&vcf.bigIndelsl$Sample!=vcf.bigIndelsl$Sample[i]]  )
-
-#vcf.SVl.prefiltered = vcf.SVl %>% filter(qual>90|find_in_multiple.SV,seqnames%in%chr_lengths$chr,altchr%in%chr_lengths$chr ) %>% #,geneSymbol %in% mutated_gene_listB$`gene name`) %>% 
-#  mutate(seqnames=str_remove(seqnames,"chr"),altchr=str_remove(altchr,"chr")) # keep high-confidence SVs
-
-#vcf.bIl.prefiltered = vcf.bigIndelsl %>% filter(qual>90|find_in_multiple.bI,seqnames%in%chr_lengths$chr ) %>% #,geneSymbol %in% mutated_gene_listB$`gene name`) %>% 
-#  mutate(seqnames=str_remove(seqnames,"chr"),altchr=str_remove(altchr,"chr")) # keep high-confidence SVs
-
-#merge
-#vcf.SVl = bind_rows(vcf.SVl.prefiltered,vcf.bIl.prefiltered)
-
-# select SVs 
-#vcf.SVl.filtered    = bind_rows(vcf.SVl.prefiltered,vcf.bIl.prefiltered) %>% filter(geneSymbol %in% mutated_gene_listB$`gene name`) 
 
 # create maf file
 maf_subset = organoids_somatic.subset@data
@@ -273,12 +193,10 @@ samplesTime = as.data.frame(matrix(c("LNET2T","LNET2Tp12",NA,
 ## check if all driver genes in annotation
 all(mutated_gene_listB$`gene name` %in% ref.33.cds$geneSymbol)
 
-hg38_bed = read.table("/data/gcs/lungNENomics/work/organoids/references/hs38DH/hs38DH_main.bed",row.names = 1,header = F)
+hg38_bed = read.table("/data/lungNENomics/work/organoids/references/hs38DH/hs38DH_main.bed",row.names = 1,header = F)
 rownames(hg38_bed) = c("start","end")
 ## plot function
 plot_crc1 <- function(genes_to_add=driver_uniq_recovered, experiment){
-  #genes_to_add = driver_uniq_recovered %>% 
-  #  mutate(chr=str_remove(CHROM,"chr"),end=start+1,value1=1,gene=geneSymbol)
   vcfs = SV_uniq_recovered[SV_uniq_recovered$Experiment==experiment,]
   
   par(mfrow=c(1,3),mar = c(3, 3, 3, 3)*0.5)
@@ -286,13 +204,10 @@ plot_crc1 <- function(genes_to_add=driver_uniq_recovered, experiment){
     sample.tmp = samplesTime[experiment,i]
     circos.clear()
     col_text <- rgb(0.2,0.2,0.2)#"grey40"
-    #circos.par("track.height"=2,gap.degree=3,cell.padding=c(0,0,0,0),"start.degree" = 90,circle.margin = 0.35 )
     circos.par("track.height" = 0.20, start.degree = 90, circle.margin = 0.35 , #canvas.xlim = c(-1, 1), canvas.ylim = c(-1, 1)
                gap.degree = 3,
                cell.padding = c(0, 0, 0, 0))
-    #circos.initialize(xlim=data.frame(cbind(0,chr_lengths$length),row.names = str_remove(chr_lengths$chr,"chr") ) )
     circos.initialize(sectors = rownames(hg38_bed),xlim = hg38_bed )
-    #circos.initializeWithIdeogram()
     
     # add gene labels
     if(any(!(unlist((genes_to_add[as.data.frame(genes_to_add)[,12+i]!="NO",] %>% filter(Experiment==experiment))$Gene) %in% ref.33.cds$geneSymbol ) ) ) warning("Some driver genes not in annotation")
@@ -339,7 +254,7 @@ plot_crc1 <- function(genes_to_add=driver_uniq_recovered, experiment){
 }
 
 for(exp.tmp in rownames(samplesTime)){
-  pdf(paste0("/data/gcs/lungNENomics/work/organoids/figures/Fig4C_raw_15122021_",exp.tmp,".pdf"),height = 4*1,width = 4*2 )
+  pdf(paste0("/data/lungNENomics/work/organoids/figures/Fig4D_raw_15122021_",exp.tmp,".pdf"),height = 4*1,width = 4*2 )
   plot_crc1(experiment=exp.tmp)
   dev.off()
 }
@@ -356,7 +271,7 @@ SV_Venn = SV_uniq_recovered %>% group_by(Experiment) %>% summarize(Tot = n(),
                                                          O2 = sum(Parental=="NO" & PDTO1=="NO" ) )
 
 write_tsv( SV_Venn %>% mutate(Prop_P_conserved = 1-P/(`P&O1&O2`+ `P&O1`+ `P&O2`+P) ) %>% dplyr::select(Experiment,Prop_P_conserved) , 
-           "/data/gcs/lungNENomics/work/organoids/figures/Table2_SVprop.tsv")
+           "/data/lungNENomics/work/organoids/figures/Table2_SVprop.tsv")
 
 library(eulerr)
 error_plot()
@@ -367,8 +282,6 @@ require(readxl)
 require(tidyverse)
 mutated_gene_list1 = read_xlsx("Lung NEN and SI NEN mutated genes_16Oct2020.xlsx",sheet = 1)
 mutated_gene_list1$Type = "LNEN"
-#mutated_gene_list1$Type[34:66] = "LNEN"
-#mutated_gene_list1$Type[67:136] = "LCNEC"
 mutated_gene_list2 = read_xlsx("Lung NEN and SI NEN mutated genes_16Oct2020.xlsx",sheet = 2)
 mutated_gene_list2$Type = "SI"
 
@@ -439,7 +352,6 @@ tabgenes = maf_subset.wSV@data %>% filter(Hugo_Symbol%in%mutated_gene_listB$`gen
   mutate(WhichType=(WhichType==2)*(-1.5)+WhichType,Type1=WhichType==1,Type2=WhichType==2 ) %>% 
   mutate(Exp=factor(Exp,levels =  levels_nmut)) %>% 
   arrange(Exp,desc(nexp),desc(n))
-#tabgenes$Exp = 
 levels_normal = c("SINET7","SINET8","SINET9","LNET6","LNET10","LCNEC3","LCNEC4","PANEC1")
 levels_nmut = c("LCNEC4", "PANEC1", "LCNEC3", "LNET10", "SINET8", "SINET7", "SINET9", "LNET6")
 #tabgenes$WhichType[tabgenes$WhichType==2] = 0.5
