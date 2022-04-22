@@ -8,7 +8,7 @@ Major package dependencies are mentioned below; see a list of all dependencies a
 #### Figure2D.R
 Produces density plots of expression levels.
 
-#### Figure2E-F.R
+#### [Figure2E-F.md](Rscripts/Fig2/Fig2E-F.md)
 - requires [trend R package](https://cran.r-project.org/web/packages/trend/index.html)
 
 Produces plots of passage times, computes temporal trend tests and writes results (Table S1).
