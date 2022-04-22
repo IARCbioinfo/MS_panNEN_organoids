@@ -75,7 +75,7 @@ ggplot(PassageTimes, aes(x=Time.secs/60/60/24,y=Experiment,col=Experiment)) + ge
 ## Warning: Removed 106 row(s) containing missing values (geom_path).
 ```
 
-![](Fig2E-F_files/figure-html/Figure 2E-1.png)<!-- -->
+![](Fig2E-F_files/figure-html/Figure2E-1.png)<!-- -->
 
 ## Test temporal trend in passage times
 We use the Mann-Kendall trend test for each experiment
