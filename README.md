@@ -5,22 +5,27 @@ This repository contains the scripts used to produce Figures in panNEN organoids
 Major package dependencies are mentioned below; see a list of all dependencies at the beginning of each script.
 
 ### Figure 2
-#### Figure 2D
+#### Figure2D.R
 Produces density plots of expression levels.
 
+#### Figure2E-F.R
+- requires [trend R package](https://cran.r-project.org/web/packages/trend/index.html)
+
+Produces plots of passage times, computes temporal trend tests and writes results (Table S1).
+
 ### Figure 3
-#### Figure 3B
+#### Figure3B.R
 Produces violin plots of gene expression (using package [ggbeeswarm](https://github.com/eclarke/ggbeeswarm)).
 
-#### Figure 3CD
+#### Figure3CD.R
 Produces UMAP representations of lung and pancreatic NENs and small intestine NETs (using umap).
 
 ### Figure 4
-#### Figure 4BC
+#### Figure4BC.R
 Produces oncoplots of somatic alterations from whole-genome and RNA-seq data (package maftools). 
 
-#### Figure 4D
+#### Figure4D.R
 Produces circos plots of copy number variants and structural variants (package circos). 
 
 ## Citation
-Dayton, Alcala, ... , Foll, Fernandez-Cuesta, Clevers. 2022 Submitted.
+Dayton*, Alcala, ... , Foll, Fernandez-Cuesta*, Clevers*. 2022 Submitted.
