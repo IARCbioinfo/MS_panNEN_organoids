@@ -6,6 +6,8 @@ Major package dependencies are mentioned below; see a list of all dependencies a
 
 ### Figure 2
 #### Figure2D.R
+- requires [ggbeeswarm R package](https://cran.r-project.org/web/packages/ggbeeswarm/index.html)
+
 Produces density plots of expression levels.
 
 #### [Figure2E-F.md](Rscripts/Fig2/Fig2E-F.md)
