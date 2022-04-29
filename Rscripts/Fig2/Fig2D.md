@@ -2,10 +2,6 @@
 title: "Fig2D"
 author: "N. Alcala"
 date: "4/22/2022"
-output:
-  html_document: 
-    keep_md: yes
-  pdf_document: default
 ---
 
 
@@ -59,9 +55,9 @@ colors_grades = c(G1= "#58b873f9", G2 = "#ff9955ff", G3 = "#f0677dff", "G1/G2" =
 ```
 
 ## Load data 
-
+Data is in TableS1.xlsx, second tab (see supplementary files from the paper)
 ```r
-expr_genes_KI67.tib = read_xlsx("/data/lungNENomics/work/organoids/SI/TableS1.xlsx",sheet = 2,skip=2,col_types = c("text","numeric","text","text","text"))
+expr_genes_KI67.tib = read_xlsx("TableS1.xlsx",sheet = 2,skip=2,col_types = c("text","numeric","text","text","text"))
 ```
 
 ## Plot Figure 2D

@@ -2,10 +2,6 @@
 title: "Fig2E-F"
 author: "N. Alcala"
 date: "4/22/2022"
-output:
-  html_document: 
-    keep_md: yes
-  pdf_document: default
 ---
 
 
