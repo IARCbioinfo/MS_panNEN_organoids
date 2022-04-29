@@ -6,9 +6,9 @@ Major package dependencies are mentioned below; see a list of all dependencies a
 
 ### Figure 2
 #### Figure2D.R
-- requires [ggbeeswarm R package](https://cran.r-project.org/web/packages/ggbeeswarm/index.html)
+- requires [ggridges R package](https://cran.r-project.org/web/packages/ggridges/)
 
-Produces density plots of expression levels.
+Produces density plots of expression levels of *MKI67* in organoids and reference tumors (data in Table S1).
 
 #### [Figure2E-F.md](Rscripts/Fig2/Fig2E-F.md)
 - requires [trend R package](https://cran.r-project.org/web/packages/trend/index.html)
@@ -17,7 +17,9 @@ Produces plots of passage times, computes temporal trend tests and writes result
 
 ### Figure 3
 #### Figure3B.R
-Produces violin plots of gene expression (using package [ggbeeswarm](https://github.com/eclarke/ggbeeswarm)).
+- requires [ggbeeswarm R package](https://cran.r-project.org/web/packages/ggbeeswarm/index.html)
+
+Produces violin plots of gene expression.
 
 #### Figure3CD.R
 Produces UMAP representations of lung and pancreatic NENs and small intestine NETs (using umap).
