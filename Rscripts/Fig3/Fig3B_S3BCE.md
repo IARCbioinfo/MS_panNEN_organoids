@@ -92,19 +92,11 @@ We then create the trajectories linking parental tumors and organoids:
 
 ```r
 traj6 = traject_RNA(dat=expr_genes_NE.tib,samples=c("LNET6T","LNET6Tp1"),col=colors_org["LNET6"],xpos = 1-0.2+rep(0:2,2),xoff=0.01)
-```
-
-
-```r
 traj13 = traject_RNA(dat=expr_genes_NE.tib,samples=c("LNET13T","LNET13Tp1"),col=colors_org["LNET13"],xpos = 1+0+rep(0:2,2),xoff=0.01)
 traj14 = traject_RNA(dat=expr_genes_NE.tib,samples=c("LNET14T","LNET14Tp1"),col=colors_org["LNET14"],xpos = 1+0.2+rep(0:2,2),xoff=0.01)
 traj15 = traject_RNA(dat=expr_genes_NE.tib,samples=c("LNET15M","LNET15Mp2"),col=colors_org["LNET15"],xpos = 1-0.2+rep(0:2,2),xoff=0.01)
 traj10.4 = traject_RNA(dat=expr_genes_NE.tib,samples=c("LNET10T","LNET10Tp4"),col=colors_org["LNET10"],xpos = 1-0.025+rep(0:2,2),xoff=0.05)
 traj10.11 = traject_RNA(dat=expr_genes_NE.tib,samples=c("LNET10Tp4","LNET10Tp11"),col=colors_org["LNET10"],xpos = 1+0.025+rep(0:2,2),xoff=0.05,fills = c("white","white"))
-```
-
-
-```r
 traj16M = traject_RNA(dat=expr_genes_NE.tib,samples=c("LNET16M","LNET16Mp1"),col=colors_org["LNET16"],xpos = 1+0.2+rep(0:2,2),xoff=0.01,lty=1)
 traj1.4  = traject_RNA(dat=expr_genes_NE.tib,samples=c("PANEC1T","PANEC1Tp4"),col=colors_org["PANEC1"],xpos = 1-0.15+rep(0:2,2),xoff=+0.01)
 traj1.14 = traject_RNA(dat=expr_genes_NE.tib,samples=c("PANEC1Tp4","PANEC1Tp14"),col=colors_org["PANEC1"],xpos = 1+rep(0:2,2)-0.15+0.01,xoff=+0.03,fills = c("white","white"))
@@ -193,6 +185,85 @@ FigS3A_raw
 ```r
 ggsave("FigS3A_raw.pdf",FigS3A_raw,width = 3.8,height = 3.8*842/783)
 ```
+
+
+## Figure S3C: Expression of SSTR2 in all samples
+We do the same figure but for SSTR2 and with all samples. We get the SSTR2 rows from the expression table
+
+```r
+expr_genes_SSTR2.tib <- expr_genes.tib %>% filter(Gene_group=="SSTR2",Grade!="NA")
+```
+
+We then create the trajectories linking parental tumors and organoids:
+
+```r
+traj6 = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("LNET6T","LNET6Tp1"),col=colors_org["LNET6"],xpos = 1-0.3,xoff=0.01)
+traj13 = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("LNET13T","LNET13Tp1"),col=colors_org["LNET13"],xpos = 1-0.1,xoff=0.01)
+traj14 = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("LNET14T","LNET14Tp1"),col=colors_org["LNET14"],xpos = 1+0.1,xoff=0.01)
+traj19 = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("LNET19T","LNET19Tp2"),col=colors_org["LNET19"],xpos = 1+0.3,xoff=0.01)
+
+
+traj15 = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("LNET15M","LNET15Mp2"),col=colors_org["LNET15"],xpos = 1-0.3,xoff=0.01)
+traj20 = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("LNET20M","LNET20Mp2"),col=colors_org["LNET20"],xpos = 1-0.15,xoff=0.01)
+traj5.1.4 = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("LNET5T","LNET5Tp4"),col=colors_org["LNET5"],xpos = 1,xoff = -0.03)
+traj5.1.7 = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("LNET5Tp4","LNET5Tp7"),col=colors_org["LNET5"],xpos = 1-0.03,xoff = -0.03,fills = c("white","white"))
+traj5.2   = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("LNET5T","LNET5Tp2.2"),col=colors_org["LNET5"],xpos = 1,xoff = +0.03)
+traj10.4 = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("LNET10T","LNET10Tp4"),col=colors_org["LNET10"],xpos = 1+0.1,xoff=0.03)
+traj10.11 = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("LNET10Tp4","LNET10Tp11"),col=colors_org["LNET10"],xpos = 1+0.13,xoff=0.03,fills = c("white","white"))
+traj16M = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("LNET16M","LNET16Mp1"),col=colors_org["LNET16"],xpos = 1+0.2,xoff=0.01,lty=1)
+traj16T = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("LNET16T","LNET16Tp2"),col=colors_org["LNET16"],xpos = 1+0.3,xoff=0.01)
+
+traj1.4  = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("PANEC1T","PANEC1Tp4"),col=colors_org["PANEC1"],xpos = 1-0.15,xoff=+0.01)
+traj1.14 = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("PANEC1Tp4","PANEC1Tp14"),col=colors_org["PANEC1"],xpos = 1-0.15+0.01,xoff=+0.03,fills = c("white","white"))
+traj3.17 = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("LCNEC3T","LCNEC3Tp17.2"),col=colors_org["LCNEC3"],xpos = 1,xoff=0.03)
+traj3.24 = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("LCNEC3Tp17.2","LCNEC3Tp24"),col=colors_org["LCNEC3"],xpos = 1+0.03,xoff=0.03,fills = c("white","white"))
+traj11   = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("LCNEC11M","LCNEC11Mp3"),col=colors_org["LCNEC11"],xpos = 1+0.15,xoff=-0.05,lty=1)
+traj4.7  = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("LCNEC4T","LCNEC4Tp7"),col=colors_org["LCNEC4"],xpos = 1+0.25,xoff=0.03)
+traj4.24 = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("LCNEC4Tp7","LCNEC4Tp24"),col=colors_org["LCNEC4"],xpos = 1+0.28,xoff=0.03,fills = c("white","white"))
+
+traj7  = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("SINET7M","SINET7Mp2"),col=colors_org["SINET7"],xpos = 1-0.4,xoff=0.01,lty=1)
+traj8  = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("SINET8M","SINET8Mp2"),col=colors_org["SINET8"],xpos = 1-0.2,xoff=0.01,lty=1)
+traj21 = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("SINET21M","SINET21Mp2"),col=colors_org["SINET21"],xpos = 1,xoff=0.01,lty=1)
+traj12.1 = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("SINET12M","SINET12Mp1.1"),col=colors_org["SINET12"],xpos = 1.15,xoff=-0.04,lty=1)
+traj12.3 = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("SINET12M","SINET12Mp1.3"),col=colors_org["SINET12"],xpos = 1.15,xoff=0.04,lty=1)
+traj22 = traject_RNA(dat=expr_genes_SSTR2.tib,samples=c("SINET22M","SINET22Mp2"),col=colors_org["SINET22"],xpos = 1+0.4,xoff=-0.02,lty=1)
+```
+
+We then plot the figure presenting the expression of SSTR2 in organoids and reference tumors:
+
+```r
+FigS3C_raw <- ggplot( expr_genes_SSTR2.tib %>% filter(Experiment=="Reference",Type!="SCLC",!is.na(Grade)) , aes(x=name,y=Expression,color=Experiment) ) + 
+  geom_violin(aes(x=name,y=Expression,color=NA),draw_quantiles = c(0.25,0.5,0.75), color=NA,scale = "width",fill=rgb(0.85,0.85,0.85),width=1,position=position_dodge(width=1)) + 
+  geom_hline(yintercept =1,linetype="dashed")+
+  traj6 + traj13 +traj14 + 
+  traj10.4 + traj10.11 + traj15 + traj16M + 
+  traj3.17 + traj3.24 + traj4.7 + traj4.24 + traj11 +
+  traj1.4 + traj1.14+
+  traj8 + traj12.1 + traj12.3 +traj21 +traj22 +
+  traj5.1.4 + traj5.1.7 +traj5.2 +
+  traj19 +traj20+traj16T +
+  traj7 + 
+  geom_point(data = expr_genes_SSTR2.tib %>% filter(Sample=="LCNEC23Mp3") %>% mutate(xpos=1-0.30-0.001), aes(x = xpos, y = Expression), inherit.aes = F, lwd=1,stroke=1.5,colour = colors_org["LCNEC23"],fill="white",shape=21) +
+  theme_minimal() + theme(legend.title=element_blank() ,axis.text.x = element_text(face="italic",angle = 90, vjust = 0.5, hjust=1), 
+                          strip.text.x =element_text(face = "bold",size = 10),axis.title.x = element_blank() , panel.grid.major.x = element_blank() ) + 
+  facet_grid(TypeGrade~Gene_group,scales = "free_x", space = "free",drop = T) + 
+  theme(panel.background = element_rect(fill = NA, color = "black"))+
+  labs(x="Markers",y="Gene expression (TPM)" ) + 
+  scale_y_log10(breaks=c(0.01,1,10**2,10**4),limits=c(0.01,200000),labels=c("≤0.01",1,100,10000)) + 
+  scale_color_manual(values=c(colors_org, Reference=rgb(0.75,0.75,0.75))[unique(expr_genes_SSTR2.tib$Experiment)],
+                     limits = unique(expr_genes_SSTR2.tib$Experiment), 
+                     labels = unique(expr_genes_SSTR2.tib$Experiment) )
+
+FigS3C_raw
+```
+
+![](Fig3B_S3BCE_files/figure-html/FigureS3C-1.png)<!-- -->
+
+```r
+ggsave("FigS3C_raw.pdf",FigS3C_raw,width = 2.5,height = 3.8*842/783)
+```
+
+
 
 
 ## Session Info 
