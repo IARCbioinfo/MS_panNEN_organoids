@@ -15,11 +15,8 @@ output:
 
 ```r
 library(tidyverse)
-library(reshape2)
 library(ggbeeswarm)
 library(readxl)
-library(ggforce)
-library(SummarizedExperiment)
 ```
 
 
@@ -51,7 +48,7 @@ List high-purity tumors
 high_pur_samples = c("LNET13T","LNET13Tp1","LNET14T","LNET14Tp1","LNET6T","LNET6Tp1","LNET10T","LNET10Tp11","LNET10Tp4","LNET15M","LNET15Mp2","LNET16M","LNET16Mp1")
 ```
 
-## Define function for plotting trajectory 
+## Define function for plotting expression trajectories
 This function takes an expression table and 2 sample names and creates a curve linking the 2 samples
 
 ```r
@@ -115,7 +112,7 @@ traj22 = traject_RNA(dat=expr_genes_NE.tib,samples=c("SINET22M","SINET22Mp2"),co
 We then plot the figure presenting the expression of neuronal markers in organoids and reference tumors:
 
 ```r
-Fig3A_raw <- ggplot( expr_genes_NE.tib %>% filter(Experiment=="Reference",Type!="SCLC",!is.na(Grade)) , aes(x=name,y=Expression,color=Experiment) ) + 
+Fig3B_raw <- ggplot( expr_genes_NE.tib %>% filter(Experiment=="Reference",Type!="SCLC",!is.na(Grade)) , aes(x=name,y=Expression,color=Experiment) ) + 
   geom_violin(aes(x=name,y=Expression,color=NA),draw_quantiles = c(0.25,0.5,0.75), color=NA,scale = "width",fill=rgb(0.85,0.85,0.85),width=1,position=position_dodge(width=1)) + 
   geom_hline(yintercept =1,linetype="dashed")+
   traj6 + traj13 +traj14 + 
@@ -134,13 +131,13 @@ Fig3A_raw <- ggplot( expr_genes_NE.tib %>% filter(Experiment=="Reference",Type!=
                      limits = unique(expr_genes_NE.tib$Experiment), 
                      labels = unique(expr_genes_NE.tib$Experiment) )
 
-Fig3A_raw
+Fig3B_raw
 ```
 
 ![](Fig3B_S3BCE_files/figure-html/Figure3B-1.png)<!-- -->
 
 ```r
-ggsave("Fig3A_raw.pdf",Fig3A_raw,width = 3.8,height = 3.8*842/783)
+ggsave("Fig3B_raw.pdf",Fig3B_raw,width = 3.8,height = 3.8*842/783)
 ```
 
 
@@ -161,7 +158,7 @@ traj7  = traject_RNA(dat=expr_genes_NE.tib,samples=c("SINET7M","SINET7Mp2"),col=
 We then plot the figure presenting the expression of neuronal markers in organoids and reference tumors:
 
 ```r
-FigS3A_raw <- ggplot( expr_genes_NE.tib %>% filter(Experiment=="Reference",!Type%in%c("SCLC","LCNEC"),!is.na(Grade)) , aes(x=name,y=Expression,color=Experiment) ) + 
+FigS3B_raw <- ggplot( expr_genes_NE.tib %>% filter(Experiment=="Reference",!Type%in%c("SCLC","LCNEC"),!is.na(Grade)) , aes(x=name,y=Expression,color=Experiment) ) + 
   geom_violin(aes(x=name,y=Expression,color=NA),draw_quantiles = c(0.25,0.5,0.75), color=NA,scale = "width",fill=rgb(0.85,0.85,0.85),width=1,position=position_dodge(width=1)) + 
   geom_hline(yintercept =1,linetype="dashed")+
   traj5.1.4 + traj5.1.7 +traj5.2 +
@@ -177,13 +174,13 @@ FigS3A_raw <- ggplot( expr_genes_NE.tib %>% filter(Experiment=="Reference",!Type
                      limits = unique(expr_genes_NE.tib$Experiment), 
                      labels = unique(expr_genes_NE.tib$Experiment) )
 
-FigS3A_raw
+FigS3B_raw
 ```
 
 ![](Fig3B_S3BCE_files/figure-html/FigureS3B-1.png)<!-- -->
 
 ```r
-ggsave("FigS3A_raw.pdf",FigS3A_raw,width = 3.8,height = 3.8*842/783)
+ggsave("FigS3B_raw.pdf",FigS3B_raw,width = 3.8,height = 3.8*842/783)
 ```
 
 
@@ -264,7 +261,52 @@ ggsave("FigS3C_raw.pdf",FigS3C_raw,width = 2.5,height = 3.8*842/783)
 ```
 
 
+## Figure S3E: Expression of OTP and immune checkpoint genes in lung tumors and organoids
+We first subset the genes
 
+```r
+expr_genes_OTPIC.tib <- expr_genes.tib %>% filter(Gene_group%in%c("OTP","Immune checkpoint genes"),Grade!="NA",
+                                                  Type%in%c("LCNEC","LNET")) 
+```
+We then average the expression of HLA-D genes, and order genes to put receptors and ligands next to each other, and flag known supra-carcinoids
+
+```r
+expr_genes_OTPIC.tib <- expr_genes_OTPIC.tib %>% filter(str_detect(name,"HLA")) %>% group_by(Sample) %>% summarize(name="HLA-D",Expression=median(Expression),Type=Type[1],Experiment=Experiment[1], Grade=Grade[1],Gene_group=Gene_group[1],TypeGrade=TypeGrade[1]) %>% bind_rows(expr_genes_OTPIC.tib %>% filter(!str_detect(name,"HLA"))) %>% mutate(name=factor(name, levels=c("OTP","HLA-D","LAG3","IGSF11","VSIR","PDCD1LG2","CD274","PDCD1","LGALS9","HAVCR2","CTLA4","CD80","CD86"))) %>% mutate(SupraCa=Sample%in%c("S01513","LNEN005","LNEN012"))
+```
+
+We compute the trajectories
+
+```r
+traj10.4 = traject_RNA(dat=expr_genes_OTPIC.tib %>% arrange(name),samples=c("LNET10T","LNET10Tp4"),col=colors_org["LNET10"],xpos = 1-0.3+c(0,0:11),xoff=0.15)
+traj10.11 = traject_RNA(dat=expr_genes_OTPIC.tib%>% arrange(name),samples=c("LNET10Tp4","LNET10Tp11"),col=colors_org["LNET10"],xpos = 1-0.15+c(0,0:11),xoff=0.15,fills = c("white","white"))
+```
+
+We plot the expression
+
+```r
+FigS3E_raw <- ggplot( expr_genes_OTPIC.tib %>% filter(Experiment=="Reference",TypeGrade=="LNET.G2",!SupraCa) , aes(x=name,y=Expression,color=Experiment) ) + 
+  geom_violin(aes(x=name,y=Expression,color=NA),draw_quantiles = c(0.25,0.5,0.75), color=NA,scale = "width",fill=rgb(0.85,0.85,0.85),width=1,position=position_dodge(width=1)) + 
+  geom_hline(yintercept =1,linetype="dashed")+
+  geom_point(data=expr_genes_OTPIC.tib%>% filter(SupraCa),col="red") + 
+  traj10.4 + traj10.11 + 
+  theme_minimal() + theme(legend.title=element_blank() ,axis.text.x = element_text(face="italic",angle = 90, vjust = 0.5, hjust=1), 
+                          strip.text.x =element_text(face = "bold",size = 10),axis.title.x = element_blank() , panel.grid.major.x = element_blank() ) + 
+  facet_grid(TypeGrade~Gene_group,scales = "free_x", space = "free",drop = T) + 
+  theme(panel.background = element_rect(fill = NA, color = "black"))+
+  labs(x="Markers",y="Gene expression (TPM)" ) + 
+  scale_y_log10(breaks=c(0.01,1,10**2),limits=c(0.01,1000),labels=c("≤0.01",1,100)) + 
+  scale_color_manual(values=c(colors_org, Reference=rgb(0.75,0.75,0.75))[unique(expr_genes_SSTR2.tib$Experiment)],
+                     limits = unique(expr_genes_OTPIC.tib$Experiment), 
+                     labels = unique(expr_genes_OTPIC.tib$Experiment) )
+
+FigS3E_raw
+```
+
+![](Fig3B_S3BCE_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+
+```r
+ggsave("FigS3E_raw.pdf",FigS3E_raw,width = 3.8,height = 2.5)
+```
 
 ## Session Info 
 
@@ -289,46 +331,28 @@ sessionInfo()
 ## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 ## 
 ## attached base packages:
-## [1] stats4    stats     graphics  grDevices utils     datasets  methods  
-## [8] base     
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] SummarizedExperiment_1.24.0 Biobase_2.54.0             
-##  [3] GenomicRanges_1.46.1        GenomeInfoDb_1.30.1        
-##  [5] IRanges_2.28.0              S4Vectors_0.32.3           
-##  [7] BiocGenerics_0.40.0         MatrixGenerics_1.6.0       
-##  [9] matrixStats_0.62.0          ggforce_0.3.3              
-## [11] readxl_1.4.0                ggbeeswarm_0.6.0           
-## [13] reshape2_1.4.4              forcats_0.5.1              
-## [15] stringr_1.4.0               dplyr_1.0.9                
-## [17] purrr_0.3.4                 readr_2.1.2                
-## [19] tidyr_1.2.0                 tibble_3.1.7               
-## [21] ggplot2_3.3.5               tidyverse_1.3.1            
+##  [1] readxl_1.4.0     ggbeeswarm_0.6.0 forcats_0.5.1    stringr_1.4.0   
+##  [5] dplyr_1.0.9      purrr_0.3.4      readr_2.1.2      tidyr_1.2.0     
+##  [9] tibble_3.1.7     ggplot2_3.3.5    tidyverse_1.3.1 
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] bitops_1.0-7           fs_1.5.2               lubridate_1.8.0       
-##  [4] httr_1.4.2             tools_4.1.2            backports_1.4.1       
-##  [7] bslib_0.3.1            utf8_1.2.2             R6_2.5.1              
-## [10] vipor_0.4.5            DBI_1.1.2              colorspace_2.0-3      
-## [13] withr_2.5.0            tidyselect_1.1.2       compiler_4.1.2        
-## [16] cli_3.3.0              rvest_1.0.2            xml2_1.3.3            
-## [19] DelayedArray_0.20.0    sass_0.4.1             scales_1.2.0          
-## [22] digest_0.6.29          rmarkdown_2.14         XVector_0.34.0        
-## [25] pkgconfig_2.0.3        htmltools_0.5.2        highr_0.9             
-## [28] dbplyr_2.1.1           fastmap_1.1.0          rlang_1.0.2           
-## [31] rstudioapi_0.13        jquerylib_0.1.4        farver_2.1.0          
-## [34] generics_0.1.2         jsonlite_1.8.0         RCurl_1.98-1.6        
-## [37] magrittr_2.0.2         GenomeInfoDbData_1.2.7 Matrix_1.4-1          
-## [40] Rcpp_1.0.8.3           munsell_0.5.0          fansi_1.0.3           
-## [43] lifecycle_1.0.1        stringi_1.7.6          yaml_2.3.5            
-## [46] MASS_7.3-57            zlibbioc_1.40.0        plyr_1.8.6            
-## [49] grid_4.1.2             crayon_1.5.1           lattice_0.20-45       
-## [52] haven_2.5.0            hms_1.1.1              knitr_1.38            
-## [55] pillar_1.7.0           reprex_2.0.1           glue_1.6.2            
-## [58] evaluate_0.15          modelr_0.1.8           vctrs_0.4.1           
-## [61] tzdb_0.3.0             tweenr_1.0.2           cellranger_1.1.0      
-## [64] gtable_0.3.0           polyclip_1.10-0        assertthat_0.2.1      
-## [67] xfun_0.30              broom_0.8.0            beeswarm_0.4.0        
-## [70] ellipsis_0.3.2
+##  [1] beeswarm_0.4.0   tidyselect_1.1.2 xfun_0.30        bslib_0.3.1     
+##  [5] haven_2.5.0      colorspace_2.0-3 vctrs_0.4.1      generics_0.1.2  
+##  [9] htmltools_0.5.2  yaml_2.3.5       utf8_1.2.2       rlang_1.0.2     
+## [13] jquerylib_0.1.4  pillar_1.7.0     withr_2.5.0      glue_1.6.2      
+## [17] DBI_1.1.2        dbplyr_2.1.1     modelr_0.1.8     lifecycle_1.0.1 
+## [21] munsell_0.5.0    gtable_0.3.0     cellranger_1.1.0 rvest_1.0.2     
+## [25] evaluate_0.15    knitr_1.38       tzdb_0.3.0       fastmap_1.1.0   
+## [29] vipor_0.4.5      fansi_1.0.3      highr_0.9        broom_0.8.0     
+## [33] backports_1.4.1  scales_1.2.0     jsonlite_1.8.0   farver_2.1.0    
+## [37] fs_1.5.2         hms_1.1.1        digest_0.6.29    stringi_1.7.6   
+## [41] grid_4.1.2       cli_3.3.0        tools_4.1.2      magrittr_2.0.2  
+## [45] sass_0.4.1       crayon_1.5.1     pkgconfig_2.0.3  ellipsis_0.3.2  
+## [49] xml2_1.3.3       reprex_2.0.1     lubridate_1.8.0  assertthat_0.2.1
+## [53] rmarkdown_2.14   httr_1.4.2       rstudioapi_0.13  R6_2.5.1        
+## [57] compiler_4.1.2
 ```
 
