@@ -16,10 +16,10 @@ Produces density plots of expression levels of *MKI67* in organoids and referenc
 Produces plots of passage times, computes temporal trend tests and writes results (Table S1).
 
 ### Figure 3. High-purity NEN PDTOs recapitulate the gene expression of original tumors
-#### Figure3B.R
+#### [Figure3B.md](Rscripts/Fig3/Fig3B_S3BCE.md)
 - requires [ggbeeswarm R package](https://cran.r-project.org/web/packages/ggbeeswarm/index.html)
 
-Produces violin plots of gene expression.
+Produces violin plots of gene expression for various markers from Table S1, producing Figure 3B, S3B, C, and E.
 
 #### Figure3CD
 Produces UMAP representations of lung and pancreatic NENs and small intestine NETs (using umap).
