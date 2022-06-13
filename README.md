@@ -28,8 +28,10 @@ Produces violin plots of gene expression for various markers from Table S2, prod
 Produces the unsupervised (UMAP representations) and supervised (PLS) analyses of lung and pancreatic NENs and small intestine NETs presented in Figures 3CD and S3F-I.
 
 ### Figure 4. NEN PDTOs retain genomic features of parental tumors
-#### Figure4BC
-Produces oncoplots of somatic alterations from whole-genome and RNA-seq data (package maftools). 
+#### [Figure4BC_S4BC.md](Rscripts/Fig4/Fig4BC_S4BC.md)
+- requires [maftools R package](https://https://bioconductor.org/packages/release/bioc/html/maftools.html)
+
+Produces oncoplots of somatic alterations from whole-genome and RNA-seq data and tumor mutational burden plots. 
 
 #### Figure4D
 Produces circos plots of copy number variants and structural variants (package circos). 
