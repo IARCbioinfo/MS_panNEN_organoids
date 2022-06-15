@@ -33,8 +33,10 @@ Produces the unsupervised (UMAP representations) and supervised (PLS) analyses o
 
 Produces oncoplots of somatic alterations from whole-genome and RNA-seq data and tumor mutational burden plots. 
 
-#### Figure4D
-Produces circos plots of copy number variants and structural variants (package circos). 
+#### [Figure4D_S4D.md](Rscripts/Fig4/Fig4D_S4D.md)
+- requires [circlize R package](https://jokergoo.github.io/circlize_book/book/)
+
+Produces circos plots of copy number variants and structural variants in high-purity (Fig. 4D) and mixed (Fig. S4D) samples. 
 
 ### Figure 5. NEN PDTOs recapitulate the intra-tumor heterogeneity of the parental tumor
 #### Figure5A
