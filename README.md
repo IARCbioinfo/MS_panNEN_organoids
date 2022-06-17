@@ -1,5 +1,5 @@
 # PanNEN manuscript scripts
-This repository contains the scripts used to produce Figures in panNEN organoids manuscript Dayton et al. (Submitted).
+This repository contains the scripts used to produce the genomic Figures in the panNEN organoids manuscript Dayton et al. (Submitted).
 
 ## Rscripts
 Major package dependencies are mentioned below; see a list of all dependencies at the beginning of each script.
@@ -41,6 +41,13 @@ Produces circos plots of copy number variants and structural variants in high-pu
 ### Figure 5. NEN PDTOs recapitulate the intra-tumor heterogeneity of the parental tumor
 #### Figure5A
 ...
+
+### Figure 7. LNETs express EGFR
+#### [FigureS7B.md](Rscripts/Fig7/FigS7B.md)
+- requires [ggbeeswarm R package](https://cran.r-project.org/web/packages/ggbeeswarm/index.html)
+
+Produces violin plots of EGFR gene expression from Table S2, producing Figure S7B.
+
 
 ## Citation
 Dayton*, Alcala, ... , Foll, Fernandez-Cuesta*, Clevers*. 2022 Submitted.
