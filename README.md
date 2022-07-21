@@ -2,7 +2,7 @@
 This repository contains the scripts used to produce the genomic Figures in the panNEN organoids manuscript Dayton et al. (Submitted).
 
 ## Rscripts
-Major package dependencies are mentioned below; see a list of all dependencies at the beginning of each script.
+The Rscripts folder contains markdown files detailing R commands used to produce the figures. Major package dependencies are mentioned below; see a list of all dependencies at the beginning of each script.
 
 ### Figure 2. NET and LCNEC PDTOs retain histologic features and relative growth-rate of parental tumor subtypes
 #### [Figure2D.md](Rscripts/Fig2/Fig2D.md)
