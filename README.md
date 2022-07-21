@@ -53,8 +53,13 @@ Produces circos plots of copy number variants and structural variants in high-pu
 ![](Rscripts/Fig4/Fig4D_S4D_files/figure-html/Fig4D-4.png)
 
 ### Figure 5. NEN PDTOs recapitulate the intra-tumor heterogeneity of the parental tumor
-#### Figure5A
-...
+#### [Fig5_S5.md](Rscripts/Fig5/Fig5_S5.md)
+- requires [DPclust R package](https://github.com/Wedge-lab/dpclust)
+
+Produces Venn-Euler diagrams of shared variants (Fig. 5A and S5B) and joint plots of cancer cell fractions (CCFs).
+
+![](Rscripts/Fig5/Fig5_S5_files/figure-html/fig5AS5B-1.png)
+![](Rscripts/Fig5/Fig5_S5_files/figure-html/S5A-1.png)
 
 ### Figure 7. LNETs express EGFR
 #### [FigureS7B.md](Rscripts/Fig7/FigS7B.md)
