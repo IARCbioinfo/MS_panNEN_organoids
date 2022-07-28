@@ -58,8 +58,9 @@ Produces circos plots of copy number variants and structural variants in high-pu
 
 Produces Venn-Euler diagrams of shared variants (Fig. 5A and S5B) and joint plots of cancer cell fractions (CCFs).
 
-![](Rscripts/Fig5/Fig5_S5_files/figure-html/fig5AS5B-3.png)
-![](Rscripts/Fig5/Fig5_S5_files/figure-html/S5A-3.png)
+![](Rscripts/Fig5/Fig5_S5_files/figure-html/fig5AS5B-4.png)
+![](Rscripts/Fig5/Fig5_S5_files/figure-html/S5A-7.png)
+![](Rscripts/Fig5/Fig5_S5_files/figure-html/evolplots-7.png)
 
 ### Figure 7. LNETs express EGFR
 #### [FigureS7B.md](Rscripts/Fig7/FigS7B.md)
