@@ -460,7 +460,6 @@ treesl = vector(mode = "list",length = length(dataset_fracs_list) )
 
 load("clonevoll.RData")
 for(i in 1:length(dataset_fracs_list)){
-  print(i)
   # find cluster locations
   ccf.cols = colnames(dataset_fracs_list[[i]]$subclonal.fractions)
   variants.tmp = dataset_fracs_list[[i]] %>% filter(Cluster!="Uncertain") %>% rename("Cluster"="cluster") %>%
@@ -516,6 +515,7 @@ for(i in 1:length(dataset_fracs_list)){
 }else{
   ybest = ylist
 }
+  if(length(ybest)==1) ybest = ybest[[1]]
 # plot in file all phylogenies
  y2 <- convert.consensus.tree.clone.to.branch(ybest, branch.scale = 'sqrt')
  plots = plot.clonal.models(y2,
@@ -547,7 +547,6 @@ for(i in 1:length(dataset_fracs_list)){
           f = generateFishplotInputs(results=ybest)
           fishes = createFishPlotObjects(f)
           
-          #plot with fishplot
           if(length(variants.tmp)>3){
             vlab = c("Parent","PDTO","PDTO2")
           }else{
@@ -559,6 +558,10 @@ for(i in 1:length(dataset_fracs_list)){
           fishPlot(fish,shape="spline", title.btm="Patient", cex.title=0.5,
                      vlines=fish@timepoints, border = 1,col.border = rgb(0,0,0,0),cex.vlab = 1,bg.type = "solid", bg.col = rgb(0,0,0,0),
                      vlab=vlab, pad.left=2)
+          
+          write_tsv(bind_cols(Clone=fish@clone.labels,fish@frac.table,Parents=fish@parents),
+                    paste0("/data/lungNENomics/work/organoids/figures/TableS4_clones_",DPclustsres.files.names[i],".tsv") )
+          
           # other tree
           fish = layoutClones(fishes[[sample(1:length(fishes),size = 1)]])
           fish = setCol(fish,f$clonevol.clone.colors)
@@ -566,10 +569,6 @@ for(i in 1:length(dataset_fracs_list)){
                    vlines=fish@timepoints, border = 1,col.border = rgb(0,0,0,0),cex.vlab = 1,bg.type = "solid", bg.col = rgb(0,0,0,0),
                    vlab=vlab, pad.left=2)
 }
-```
-
-```
-## [1] 1
 ```
 
 ```
@@ -587,10 +586,6 @@ for(i in 1:length(dataset_fracs_list)){
 
 ```
 ## [1] "WARNING: there were not 3 background gradient colors set - falling back to defaults"
-```
-
-```
-## [1] 2
 ```
 
 ```
@@ -613,10 +608,6 @@ for(i in 1:length(dataset_fracs_list)){
 ```
 
 ```
-## [1] 3
-```
-
-```
 ## Plotting pruned consensus trees...
 ```
 
@@ -625,28 +616,21 @@ for(i in 1:length(dataset_fracs_list)){
 ```
 ## Output plots are in: LNET10
 ## [1] 1
-## [1] 2
 ```
 
 ```
 ## [1] "WARNING: there were not 3 background gradient colors set - falling back to defaults"
 ```
 
-![](Fig5_S5_files/figure-html/evolplots-3.png)<!-- -->
-
 ```
 ## [1] "WARNING: there were not 3 background gradient colors set - falling back to defaults"
-```
-
-```
-## [1] 4
 ```
 
 ```
 ## Plotting pruned consensus trees...
 ```
 
-![](Fig5_S5_files/figure-html/evolplots-4.png)<!-- -->
+![](Fig5_S5_files/figure-html/evolplots-3.png)<!-- -->
 
 ```
 ## Output plots are in: LNET2
@@ -657,14 +641,10 @@ for(i in 1:length(dataset_fracs_list)){
 ## [1] "WARNING: there were not 3 background gradient colors set - falling back to defaults"
 ```
 
-![](Fig5_S5_files/figure-html/evolplots-5.png)<!-- -->
+![](Fig5_S5_files/figure-html/evolplots-4.png)<!-- -->
 
 ```
 ## [1] "WARNING: there were not 3 background gradient colors set - falling back to defaults"
-```
-
-```
-## [1] 5
 ```
 
 ```
@@ -680,14 +660,10 @@ for(i in 1:length(dataset_fracs_list)){
 ## [1] "WARNING: there were not 3 background gradient colors set - falling back to defaults"
 ```
 
-![](Fig5_S5_files/figure-html/evolplots-6.png)<!-- -->
+![](Fig5_S5_files/figure-html/evolplots-5.png)<!-- -->
 
 ```
 ## [1] "WARNING: there were not 3 background gradient colors set - falling back to defaults"
-```
-
-```
-## [1] 6
 ```
 
 ```
@@ -704,21 +680,15 @@ for(i in 1:length(dataset_fracs_list)){
 ## [1] "WARNING: there were not 3 background gradient colors set - falling back to defaults"
 ```
 
-![](Fig5_S5_files/figure-html/evolplots-7.png)<!-- -->
+![](Fig5_S5_files/figure-html/evolplots-6.png)<!-- -->
 
 ```
 ## [1] "WARNING: there were not 3 background gradient colors set - falling back to defaults"
 ```
 
 ```
-## [1] 7
-```
-
-```
 ## Plotting pruned consensus trees...
 ```
-
-![](Fig5_S5_files/figure-html/evolplots-8.png)<!-- -->
 
 ```
 ## Output plots are in: PANEC1
@@ -734,21 +704,15 @@ for(i in 1:length(dataset_fracs_list)){
 ## [1] "WARNING: there were not 3 background gradient colors set - falling back to defaults"
 ```
 
-![](Fig5_S5_files/figure-html/evolplots-9.png)<!-- -->
-
 ```
 ## [1] "WARNING: there were not 3 background gradient colors set - falling back to defaults"
-```
-
-```
-## [1] 8
 ```
 
 ```
 ## Plotting pruned consensus trees...
 ```
 
-![](Fig5_S5_files/figure-html/evolplots-10.png)<!-- -->
+![](Fig5_S5_files/figure-html/evolplots-7.png)<!-- -->
 
 ```
 ## Output plots are in: SINET7
@@ -760,21 +724,15 @@ for(i in 1:length(dataset_fracs_list)){
 ## [1] "WARNING: there were not 3 background gradient colors set - falling back to defaults"
 ```
 
-![](Fig5_S5_files/figure-html/evolplots-11.png)<!-- -->
-
 ```
 ## [1] "WARNING: there were not 3 background gradient colors set - falling back to defaults"
-```
-
-```
-## [1] 9
 ```
 
 ```
 ## Plotting pruned consensus trees...
 ```
 
-![](Fig5_S5_files/figure-html/evolplots-12.png)<!-- -->
+![](Fig5_S5_files/figure-html/evolplots-8.png)<!-- -->
 
 ```
 ## Output plots are in: SINET8
@@ -785,14 +743,10 @@ for(i in 1:length(dataset_fracs_list)){
 ## [1] "WARNING: there were not 3 background gradient colors set - falling back to defaults"
 ```
 
-![](Fig5_S5_files/figure-html/evolplots-13.png)<!-- -->
+![](Fig5_S5_files/figure-html/evolplots-9.png)<!-- -->
 
 ```
 ## [1] "WARNING: there were not 3 background gradient colors set - falling back to defaults"
-```
-
-```
-## [1] 10
 ```
 
 ```
@@ -809,7 +763,7 @@ for(i in 1:length(dataset_fracs_list)){
 ## [1] "WARNING: there were not 3 background gradient colors set - falling back to defaults"
 ```
 
-![](Fig5_S5_files/figure-html/evolplots-14.png)<!-- -->
+![](Fig5_S5_files/figure-html/evolplots-10.png)<!-- -->
 
 ```
 ## [1] "WARNING: there were not 3 background gradient colors set - falling back to defaults"
