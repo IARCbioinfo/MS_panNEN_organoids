@@ -73,4 +73,4 @@ Produces violin plots of EGFR gene expression from Table S2, producing Figure S7
 ![](Rscripts/Fig7/FigS7B_files/figure-html/FigureS7B-1.png)
 
 ## Citation
-Dayton*, Alcala, ... , Foll, Fernandez-Cuesta*, Clevers*. 2022 Submitted.
+Dayton*, Alcala, ... , Foll, Fernandez-Cuesta*, Clevers*. Druggable Growth Dependencies and Tumor Evolution Analysis in Patient-Derived Organoids of Neuroendocrine Cancer. biorxiv 2022. doi: https://doi.org/10.1101/2022.10.31.514549
