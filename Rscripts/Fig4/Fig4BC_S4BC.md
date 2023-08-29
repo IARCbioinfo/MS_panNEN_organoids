@@ -1,7 +1,7 @@
 ---
 title: "Fig4BC_S4BC"
 author: "N. Alcala"
-date: "13/1/2022"
+date: "16/5/2023"
 output: 
   html_document: 
     keep_md: yes
@@ -125,6 +125,16 @@ tabgenes_hp = smallmuts %>% filter(Hugo_Symbol%in%drivers$`Gene name`, Tumor_Sam
   mutate(WhichType=(Type=="SINET")*(-1)+ (Type=="LNEN")*1) %>% 
   mutate(Exp=factor(Exp,levels =  ExpOrder.hp)) %>% 
   arrange(Exp,desc(nexp),desc(n))
+```
+
+```
+## Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in
+## dplyr 1.1.0.
+## ℹ Please use `reframe()` instead.
+## ℹ When switching from `summarise()` to `reframe()`, remember that `reframe()`
+##   always returns an ungrouped data frame and adjust accordingly.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
 ```
 
 ```
@@ -268,18 +278,29 @@ tabgenesRNA_hp = smallmutsRNA %>% filter(Hugo_Symbol%in%drivers$`Gene name`, Tum
 ```
 
 ```
+## Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in
+## dplyr 1.1.0.
+## ℹ Please use `reframe()` instead.
+## ℹ When switching from `summarise()` to `reframe()`, remember that `reframe()`
+##   always returns an ungrouped data frame and adjust accordingly.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+```
+
+```
 ## `summarise()` has grouped output by 'Hugo_Symbol'. You can override using the
 ## `.groups` argument.
 ```
 
 ```r
 vc_col = maftools:::get_vcColors(websafe = FALSE)
-vc_col["No_Coverage"] = rgb(0.5,0.5,0.5)
+vc_col["No_coverage"] = rgb(0.5,0.5,0.5)
 vc_col["Missense_Mutation"] = "#1f78b4ff"
 vc_col["Frame_Shift_Del"] = "#782121ff"
 vc_col["Frame_Shift_Ins"] = "#2ca089ff"
 
 oncoplot(maf = MAF(nonSyn = smallmutsRNA %>% filter(Tumor_Sample_Barcode %in% sampleOrderRNA.hp),syn = smallmutsRNA[-(1:nrow(smallmutsRNA)),]),
+         additionalFeature = list(c("confidence","*"),c("confidence","**"),c("confidence","***")), additionalFeaturePch = c(1,4,8),
          showTumorSampleBarcodes = T, barcode_mar = 6, drawRowBar = F,drawColBar = F,  showTitle = F,
          leftBarData = tabgenesRNA_hp[!duplicated(tabgenesRNA_hp$Hugo_Symbol),c(1,9)], 
          sampleOrder = sampleOrderRNA.hp,
@@ -296,7 +317,48 @@ oncoplot(maf = MAF(nonSyn = smallmutsRNA %>% filter(Tumor_Sample_Barcode %in% sa
 ## --Missing clinical data
 ```
 
+```
+## Warning in oncoplot(maf = MAF(nonSyn = smallmutsRNA %>%
+## filter(Tumor_Sample_Barcode %in% : Provided colors for additional features are
+## recycled
+```
+
 ![](Fig4BC_S4BC_files/figure-html/Fig4C-1.png)<!-- -->
+
+```r
+pdf("Fig4C_raw_17052023.pdf",h=7,w=6)
+oncoplot(maf = MAF(nonSyn = smallmutsRNA %>% filter(Tumor_Sample_Barcode %in% sampleOrderRNA.hp),syn = smallmutsRNA[-(1:nrow(smallmutsRNA)),]),
+         additionalFeature = list(c("confidence","*"),c("confidence","**"),c("confidence","***")), additionalFeaturePch = c(1,4,8),
+         showTumorSampleBarcodes = T, barcode_mar = 6, drawRowBar = F,drawColBar = F,  showTitle = F,
+         leftBarData = tabgenesRNA_hp[!duplicated(tabgenesRNA_hp$Hugo_Symbol),c(1,9)], 
+         sampleOrder = sampleOrderRNA.hp,
+         genes = unique(tabgenesRNA_hp$Hugo_Symbol), 
+         keepGeneOrder = TRUE,
+         removeNonMutated = FALSE,
+         colors = vc_col,
+         borderCol= "white",
+         bgCol = "#fef8e4ff")
+```
+
+```
+## -Processing clinical data
+## --Missing clinical data
+```
+
+```
+## Warning in oncoplot(maf = MAF(nonSyn = smallmutsRNA %>%
+## filter(Tumor_Sample_Barcode %in% : Provided colors for additional features are
+## recycled
+```
+
+```r
+dev.off()
+```
+
+```
+## png 
+##   2
+```
 
 ### Mixed samples (Figure S4C)
 
@@ -310,12 +372,23 @@ tabgenesRNA_lp = smallmutsRNA %>% filter(Hugo_Symbol%in%drivers$`Gene name`, Tum
 ```
 
 ```
+## Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in
+## dplyr 1.1.0.
+## ℹ Please use `reframe()` instead.
+## ℹ When switching from `summarise()` to `reframe()`, remember that `reframe()`
+##   always returns an ungrouped data frame and adjust accordingly.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+```
+
+```
 ## `summarise()` has grouped output by 'Hugo_Symbol'. You can override using the
 ## `.groups` argument.
 ```
 
 ```r
 oncoplot(maf = MAF(nonSyn = smallmutsRNA %>% filter(Tumor_Sample_Barcode %in% sampleOrderRNA.lp),syn = smallmutsRNA[-(1:nrow(smallmutsRNA)),]),
+         additionalFeature = list(c("confidence","*"),c("confidence","**"),c("confidence","***")), additionalFeaturePch = c(1,4,8),
          showTumorSampleBarcodes = T, barcode_mar = 6, drawRowBar = F,drawColBar = F,  showTitle = F,
          leftBarData = tabgenesRNA_lp[!duplicated(tabgenesRNA_lp$Hugo_Symbol),c(1,9)], 
          sampleOrder = sampleOrderRNA.lp,
@@ -332,7 +405,48 @@ oncoplot(maf = MAF(nonSyn = smallmutsRNA %>% filter(Tumor_Sample_Barcode %in% sa
 ## --Missing clinical data
 ```
 
+```
+## Warning in oncoplot(maf = MAF(nonSyn = smallmutsRNA %>%
+## filter(Tumor_Sample_Barcode %in% : Provided colors for additional features are
+## recycled
+```
+
 ![](Fig4BC_S4BC_files/figure-html/FigS4C-1.png)<!-- -->
+
+```r
+pdf("FigS4C_raw_17052023.pdf",h=4,w=4)
+oncoplot(maf = MAF(nonSyn = smallmutsRNA %>% filter(Tumor_Sample_Barcode %in% sampleOrderRNA.lp),syn = smallmutsRNA[-(1:nrow(smallmutsRNA)),]),
+         additionalFeature = list(c("confidence","*"),c("confidence","**"),c("confidence","***")), additionalFeaturePch = c(1,4,8),
+         showTumorSampleBarcodes = T, barcode_mar = 6, drawRowBar = F,drawColBar = F,  showTitle = F,
+         leftBarData = tabgenesRNA_lp[!duplicated(tabgenesRNA_lp$Hugo_Symbol),c(1,9)], 
+         sampleOrder = sampleOrderRNA.lp,
+         genes = unique(tabgenesRNA_lp$Hugo_Symbol), 
+         keepGeneOrder = TRUE,
+         removeNonMutated = FALSE,
+         colors = vc_col,
+         borderCol= "white",
+         bgCol = "#fef8e4ff")
+```
+
+```
+## -Processing clinical data
+## --Missing clinical data
+```
+
+```
+## Warning in oncoplot(maf = MAF(nonSyn = smallmutsRNA %>%
+## filter(Tumor_Sample_Barcode %in% : Provided colors for additional features are
+## recycled
+```
+
+```r
+dev.off()
+```
+
+```
+## png 
+##   2
+```
 
 
 
@@ -362,32 +476,33 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] ggpubr_0.4.0     readxl_1.4.0     forcats_0.5.1    stringr_1.4.0   
-##  [5] dplyr_1.0.9      purrr_0.3.4      readr_2.1.2      tidyr_1.2.0     
-##  [9] tibble_3.1.7     ggplot2_3.3.5    tidyverse_1.3.1  maftools_2.10.05
+##  [1] ggpubr_0.4.0     readxl_1.4.2     forcats_0.5.1    stringr_1.5.0   
+##  [5] dplyr_1.1.1      purrr_1.0.1      readr_2.1.4      tidyr_1.3.0     
+##  [9] tibble_3.2.1     ggplot2_3.3.6    tidyverse_1.3.1  maftools_2.10.05
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] lubridate_1.8.0     lattice_0.20-45     assertthat_0.2.1   
-##  [4] digest_0.6.29       utf8_1.2.2          R6_2.5.1           
-##  [7] cellranger_1.1.0    backports_1.4.1     reprex_2.0.1       
-## [10] evaluate_0.15       highr_0.9           httr_1.4.2         
-## [13] pillar_1.7.0        rlang_1.0.2         rstudioapi_0.13    
-## [16] data.table_1.14.2   car_3.0-12          jquerylib_0.1.4    
-## [19] Matrix_1.4-1        rmarkdown_2.14      labeling_0.4.2     
-## [22] splines_4.1.2       munsell_0.5.0       broom_0.8.0        
-## [25] compiler_4.1.2      modelr_0.1.8        xfun_0.30          
-## [28] pkgconfig_2.0.3     htmltools_0.5.2     tidyselect_1.1.2   
-## [31] fansi_1.0.3         crayon_1.5.1        tzdb_0.3.0         
-## [34] dbplyr_2.1.1        withr_2.5.0         grid_4.1.2         
-## [37] jsonlite_1.8.0      gtable_0.3.0        lifecycle_1.0.1    
-## [40] DBI_1.1.2           magrittr_2.0.3.9000 scales_1.2.0       
-## [43] carData_3.0-5       cli_3.3.0           stringi_1.7.6      
-## [46] farver_2.1.0        ggsignif_0.6.3      fs_1.5.2           
-## [49] xml2_1.3.3          bslib_0.3.1         ellipsis_0.3.2     
-## [52] generics_0.1.2      vctrs_0.4.1         RColorBrewer_1.1-3 
-## [55] tools_4.1.2         glue_1.6.2          hms_1.1.1          
-## [58] abind_1.4-5         fastmap_1.1.0       survival_3.3-1     
-## [61] yaml_2.3.5          colorspace_2.0-3    rstatix_0.7.0      
-## [64] rvest_1.0.2         knitr_1.38          haven_2.5.0        
-## [67] sass_0.4.1
+##  [1] httr_1.4.5          sass_0.4.5          jsonlite_1.8.4     
+##  [4] splines_4.1.2       carData_3.0-5       modelr_0.1.11      
+##  [7] bslib_0.4.2         highr_0.10          cellranger_1.1.0   
+## [10] yaml_2.3.7          pillar_1.9.0        backports_1.4.1    
+## [13] lattice_0.20-45     glue_1.6.2          digest_0.6.31      
+## [16] RColorBrewer_1.1-3  ggsignif_0.6.3      rvest_1.0.3        
+## [19] colorspace_2.1-0    htmltools_0.5.5     Matrix_1.5-4       
+## [22] pkgconfig_2.0.3     broom_1.0.4         haven_2.5.2        
+## [25] scales_1.2.1        tzdb_0.3.0          timechange_0.2.0   
+## [28] generics_0.1.3      farver_2.1.1        car_3.0-12         
+## [31] cachem_1.0.7        withr_2.5.0         cli_3.6.1          
+## [34] survival_3.5-5      magrittr_2.0.3.9000 crayon_1.5.2       
+## [37] evaluate_0.15       fs_1.6.1            fansi_1.0.4        
+## [40] rstatix_0.7.0       xml2_1.3.3          textshaping_0.3.6  
+## [43] tools_4.1.2         data.table_1.14.2   hms_1.1.3          
+## [46] lifecycle_1.0.3     munsell_0.5.0       reprex_2.0.2       
+## [49] compiler_4.1.2      jquerylib_0.1.4     systemfonts_1.0.4  
+## [52] rlang_1.1.0         grid_4.1.2          rstudioapi_0.14    
+## [55] labeling_0.4.2      rmarkdown_2.21      gtable_0.3.3       
+## [58] abind_1.4-5         DBI_1.1.3           R6_2.5.1           
+## [61] lubridate_1.9.2     knitr_1.38          fastmap_1.1.1      
+## [64] utf8_1.2.3          ragg_1.2.5          stringi_1.7.12     
+## [67] vctrs_0.6.1         dbplyr_2.3.2        tidyselect_1.2.0   
+## [70] xfun_0.38
 ```
