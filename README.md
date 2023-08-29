@@ -1,5 +1,5 @@
 # PanNEN manuscript scripts
-This repository contains the scripts used to produce the genomic Figures in the panNEN organoids manuscript Dayton et al. (Submitted).
+This repository contains the scripts used to produce the genomic Figures in the panNEN organoids manuscript Dayton et al. (Submitted) and its associated data note Alcala et al. (Submitted).
 
 ## Rscripts
 The Rscripts folder contains markdown files detailing R commands used to produce the figures. Major package dependencies are mentioned below; see a list of all dependencies at the beginning of each script.
@@ -72,5 +72,17 @@ Produces violin plots of EGFR gene expression from Table S2, producing Figure S7
 
 ![](Rscripts/Fig7/FigS7B_files/figure-html/FigureS7B-1.png)
 
-## Citation
+### Data Note Figure 6. RNA-seq variant classification using a random forest algorithm
+#### [DataNote_Fig6.md](Rscripts/DataNoteFig6/DataNote_Fig6.md)
+- requires [caret R package](https://cran.r-project.org/web/packages/caret/index.html)
+
+Produces ROC curve, confusion matrices, and feature importance metrics in Figure 6.
+
+![](Rscripts/DataNoteFig6/DataNote_Fig6_files/figure-html/ROC-1.png)
+
+
+## Citations
 Dayton*, Alcala, ... , Foll, Fernandez-Cuesta*, Clevers*. Druggable Growth Dependencies and Tumor Evolution Analysis in Patient-Derived Organoids of Neuroendocrine Cancer. biorxiv 2022. doi: https://doi.org/10.1101/2022.10.31.514549
+
+Alcala*, Voegele, ..., Dayton, Foll*. Multi-omic dataset of patient-derived tumor organoids of neuroendocrine neoplasms
+
