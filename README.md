@@ -2,7 +2,7 @@
 This repository contains the data and scripts used to produce the genomic Figures in the panNEN organoids manuscript Dayton et al. (In press; https://www.biorxiv.org/content/10.1101/2022.10.31.514549v1) and its associated data note Alcala et al. biorxiv (2023; https://www.biorxiv.org/content/10.1101/2023.08.31.555732v1).
 
 ## Data pre-processing
-We provide here the command lines used to process the RNA-sequencing and whole-genome sequencing (WGS) data. All processing was performed using the Nextflow pipelines freely available on this IARCbioinfo github account.
+We provide here the command lines used to process the RNA-sequencing and whole-genome sequencing (WGS) data. All processing was performed using the Nextflow pipelines freely available on the github account of the bioinformatics platform of the international agency for research on cancer (https://github.com/IARCbioinfo).
 
 ### RNA-seq
 
@@ -24,6 +24,8 @@ Step 3: variant calling
 The data folder contains tab-separated files with processed data:
 - *gene_expression_PDTOs_parents.tsv* contains the final gene expression matrix, with read counts for the 59607 features and 47 samples sequenced in the Dayton et al. study
 - *gene_expression_PDTOs_parents.tsv* contains the annotation of the 59607 features (gene name, ensembl ID, protein ID, gene type, etc)
+- *small_variants_WGS_PDTOs_parents.tsv* contains the somatic variants called from WGS from Table S4 of Dayton et al. 2023
+- *small_variants_drivers_RNAseq_PDTOs_parents.tsv* contains the somatic variants in driver genes called from RNA-seq from Table S4 of Dayton et al. 2023
 
 ## Rscripts
 The Rscripts folder contains markdown files detailing R commands used to produce the figures. Major package dependencies are mentioned below; see a list of all dependencies at the beginning of each script.
