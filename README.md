@@ -1,5 +1,29 @@
 # PanNEN manuscript scripts
-This repository contains the scripts used to produce the genomic Figures in the panNEN organoids manuscript Dayton et al. (Submitted) and its associated data note Alcala et al. (Submitted).
+This repository contains the data and scripts used to produce the genomic Figures in the panNEN organoids manuscript Dayton et al. (In press; https://www.biorxiv.org/content/10.1101/2022.10.31.514549v1) and its associated data note Alcala et al. biorxiv (2023; https://www.biorxiv.org/content/10.1101/2023.08.31.555732v1).
+
+## Data pre-processing
+We provide here the command lines used to process the RNA-sequencing and whole-genome sequencing (WGS) data. All processing was performed using the Nextflow pipelines freely available on this IARCbioinfo github account.
+
+### RNA-seq
+
+Step 1: mapping
+
+Step 2: post-processing
+
+Step 3: expression quantification
+
+### WGS
+
+Step 1: mapping
+
+Step 2: post-processing
+
+Step 3: variant calling
+
+## Data
+The data folder contains tab-separated files with processed data:
+- *gene_expression_PDTOs_parents.tsv* contains the final gene expression matrix, with read counts for the 59607 features and 47 samples sequenced in the Dayton et al. study
+- *gene_expression_PDTOs_parents.tsv* contains the annotation of the 59607 features (gene name, ensembl ID, protein ID, gene type, etc)
 
 ## Rscripts
 The Rscripts folder contains markdown files detailing R commands used to produce the figures. Major package dependencies are mentioned below; see a list of all dependencies at the beginning of each script.
@@ -84,5 +108,5 @@ Produces ROC curve, confusion matrices, and feature importance metrics in Figure
 ## Citations
 Dayton*, Alcala, ... , Foll, Fernandez-Cuesta*, Clevers*. Druggable Growth Dependencies and Tumor Evolution Analysis in Patient-Derived Organoids of Neuroendocrine Cancer. biorxiv 2022. doi: https://doi.org/10.1101/2022.10.31.514549
 
-Alcala*, Voegele, ..., Dayton, Foll*. Multi-omic dataset of patient-derived tumor organoids of neuroendocrine neoplasms
+Alcala*, Voegele, ..., Dayton, Foll*. Multi-omic dataset of patient-derived tumor organoids of neuroendocrine neoplasms. biorxiv 2023. doi: https://doi.org/10.1101/2023.08.31.555732
 
