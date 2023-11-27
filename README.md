@@ -6,19 +6,43 @@ We provide here the command lines used to process the RNA-sequencing and whole-g
 
 ### RNA-seq
 
-Step 1: mapping
+#### Step 1: mapping
 
-Step 2: post-processing
+#### Step 2: post-processing
 
-Step 3: expression quantification
+#### Step 3: expression quantification
 
 ### WGS
 
-Step 1: mapping
+#### Step 1: mapping
+Alignment of reads to reference genome hg38 (using the decoy + alt genome hs38.fa from the [bwakit repository](https://github.com/lh3/bwa/blob/master/bwakit/README.md)), using pipeline [IARCbioinfo/alignment-nf](https://github.com/IARCbioinfo/alignment-nf) release v1.2 and its [singularity image](https://datasets.datalad.org/?dir=/shub/IARCbioinfo/alignment-nf):
+```
+nextflow run IARCbioinfo/alignment-nf -r v1.2 -with-singularity alignment-nf_v1.2.sif -params-file params-alignment-nf.yml --output_folder BAM_organoids
+```
+Note that this step performes quality controls with fastqc, samtools, and qualimap and the associated multiqc reports presented in [Alcala et al. 2023](https://www.biorxiv.org/content/10.1101/2023.08.31.555732v1).
 
-Step 2: post-processing
+#### Step 2: variant calling
+##### Small variant calling
+With Strelka2 using the pipeline (IARCbioinfo/strelka2-nf)[https://github.com/IARCbioinfo/strelka2-nf] release v1.1 and its [singularity image](https://datasets.datalad.org/?dir=/shub/IARCbioinfo/strelka2-nf):
+```
+nextflow run IARCbioinfo/strelka2-nf -r v1.1 -with-singularity strelka2-nf_v1.1.sif -params-file params-strelka2-nf.yml --output_folder strelka2_somatic_organoids
+nextflow run IARCbioinfo/vcf_normalization-nf -r v1.1 -with-singularity vcf_normalization-nf_v1.1.sif -params-file params-vcf_normalization-nf-organoids-somatic-strelka.yml --output_folder strelka2_somatic_organoids_normalized
+nextflow run IARCbioinfo/table_annovar-nf -r v1.1 -with-singularity table_annovar-nf_v1.1.sif -params-file params-table_annovar-nf-organoids-strelka.yml --output_folder strelka2_somatic_organoids_normalized_annotated 
+```
 
-Step 3: variant calling
+With mutect2 using the pipeline (IARCbioinfo/mutect2-nf)[] release v1.1
+
+##### Copy Number Variant calling
+Copy number variant calling with pipeline [iarcbioinfo/purple-nf]() release :
+```
+nextflow run iarcbioinfo/purple-nf -r  --tn_file input_purple-nf-multisample-vcf.tsv --cohort_dir / --ref references/hs38DH/hs38DH.fa --ref_dict references/hs38DH/hs38DH.dict --output_folder PURPLE_multisample_organoids --multisample_seg
+```
+
+##### Structural variant calling
+Structural variant calling with pipeline IARCbioinfo/
+```
+nextflow run iarcbioinfo/sv_somatic_cns -r v1.0 -with-singularity sv_somatic_cns_v1.0.sif -params-file params-sv-somatic-cnv-nf.yml
+```
 
 ## Data
 The data folder contains tab-separated files with processed data:
