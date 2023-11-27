@@ -19,6 +19,8 @@ Alignment of reads to reference genome hg38 (using the decoy + alt genome hs38.f
 ```
 nextflow run IARCbioinfo/alignment-nf -r v1.2 -with-singularity alignment-nf_v1.2.sif -params-file params-alignment-nf.yml --output_folder BAM_organoids
 ```
+where params-alignment-nf.yml contains the location of the reference genome (parameter ref), GATK bundle file location parameters (snp_vcf dbsnp_146.hg38.vcf.gz, and indel_vcf Mills_and_1000G_gold_standard.indels.hg38.vcf.gz), specify the recalibration and alt options, and provide the path to the bwa postalignment script bwa-postalt.js from bwakit.
+
 Note that this step performes quality controls with fastqc, samtools, and qualimap and the associated multiqc reports presented in [Alcala et al. 2023](https://www.biorxiv.org/content/10.1101/2023.08.31.555732v1).
 
 #### Step 2: variant calling
