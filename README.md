@@ -23,23 +23,28 @@ Note that this step performes quality controls with fastqc, samtools, and qualim
 
 #### Step 2: variant calling
 ##### Small variant calling
-With Strelka2 using the pipeline (IARCbioinfo/strelka2-nf)[https://github.com/IARCbioinfo/strelka2-nf] release v1.1 and its [singularity image](https://datasets.datalad.org/?dir=/shub/IARCbioinfo/strelka2-nf):
+With Strelka2 using the pipeline [IARCbioinfo/strelka2-nf](https://github.com/IARCbioinfo/strelka2-nf) release v1.1 and its [singularity image](https://datasets.datalad.org/?dir=/shub/IARCbioinfo/strelka2-nf):
 ```
 nextflow run IARCbioinfo/strelka2-nf -r v1.1 -with-singularity strelka2-nf_v1.1.sif -params-file params-strelka2-nf.yml --output_folder strelka2_somatic_organoids
 nextflow run IARCbioinfo/vcf_normalization-nf -r v1.1 -with-singularity vcf_normalization-nf_v1.1.sif -params-file params-vcf_normalization-nf-organoids-somatic-strelka.yml --output_folder strelka2_somatic_organoids_normalized
 nextflow run IARCbioinfo/table_annovar-nf -r v1.1 -with-singularity table_annovar-nf_v1.1.sif -params-file params-table_annovar-nf-organoids-strelka.yml --output_folder strelka2_somatic_organoids_normalized_annotated 
 ```
 
-With mutect2 using the pipeline (IARCbioinfo/mutect2-nf)[] release v1.1
+With mutect2 using the pipeline [IARCbioinfo/mutect2-nf](https://github.com/IARCbioinfo/mutect-nf) release v2.2 and its [singularity image](https://datasets.datalad.org/?dir=/shub/IARCbioinfo/mutect-nf)
+```
+nextflow run IARCbioinfo/mutect-nf -r v2.2 -with-singularity mutect-nf_v2.2.sif -params-file params-mutect2-nf.yml
+nextflow run IARCbioinfo/vcf_normalization-nf -r v1.1 -with-singularity vcf_normalization-nf_v1.1.sif -params-file params-vcf_normalization-nf-organoids-somatic-mutect.yml --output_folder mutect2_somatic_organoids_normalized
+nextflow run IARCbioinfo/table_annovar-nf -r v1.1 -with-singularity table_annovar-nf_v1.1.sif -params-file params-table_annovar-nf-organoids-mutect.yml --output_folder mutect2_somatic_organoids_normalized_annotated 
+```
 
 ##### Copy Number Variant calling
-Copy number variant calling with pipeline [iarcbioinfo/purple-nf]() release :
+Copy number variant calling with pipeline [iarcbioinfo/purple-nf](https://github.com/IARCbioinfo/purple-nf/tree/dev_multi-sample) branch dev_multi-sample, using the same genome reference as for the mapping step:
 ```
 nextflow run iarcbioinfo/purple-nf -r  --tn_file input_purple-nf-multisample-vcf.tsv --cohort_dir / --ref references/hs38DH/hs38DH.fa --ref_dict references/hs38DH/hs38DH.dict --output_folder PURPLE_multisample_organoids --multisample_seg
 ```
 
 ##### Structural variant calling
-Structural variant calling with pipeline IARCbioinfo/
+Structural variant calling with pipeline [IARCbioinfo/sv_somatic_cns]() release v1.0 and its associated [singularity image]():
 ```
 nextflow run iarcbioinfo/sv_somatic_cns -r v1.0 -with-singularity sv_somatic_cns_v1.0.sif -params-file params-sv-somatic-cnv-nf.yml
 ```
