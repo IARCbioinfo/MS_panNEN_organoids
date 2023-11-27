@@ -28,9 +28,8 @@ Note that this step performes quality controls with fastqc, samtools, and qualim
 With Strelka2 using the pipeline [IARCbioinfo/strelka2-nf](https://github.com/IARCbioinfo/strelka2-nf) release v1.1 and its [singularity image](https://datasets.datalad.org/?dir=/shub/IARCbioinfo/strelka2-nf):
 ```
 nextflow run IARCbioinfo/strelka2-nf -r v1.1 -with-singularity strelka2-nf_v1.1.sif -params-file params-strelka2-nf.yml --output_folder strelka2_somatic_organoids
-nextflow run IARCbioinfo/vcf_normalization-nf -r v1.1 -with-singularity vcf_normalization-nf_v1.1.sif -params-file params-vcf_normalization-nf-organoids-somatic-strelka.yml --output_folder strelka2_somatic_organoids_normalized
-nextflow run IARCbioinfo/table_annovar-nf -r v1.1 -with-singularity table_annovar-nf_v1.1.sif -params-file params-table_annovar-nf-organoids-strelka.yml --output_folder strelka2_somatic_organoids_normalized_annotated 
 ```
+where params-strelka2-nf.yml contains the parameters of the pipeline (AF: true, outputCallableRegions: true, mode: somatic, ref: location of hs38DH.fa from bwakit, input_file: path to tsv file with tumor and normal bam file locations), 
 
 With mutect2 using the pipeline [IARCbioinfo/mutect2-nf](https://github.com/IARCbioinfo/mutect-nf) release v2.2 and its [singularity image](https://datasets.datalad.org/?dir=/shub/IARCbioinfo/mutect-nf)
 ```
@@ -38,11 +37,13 @@ nextflow run IARCbioinfo/mutect-nf -r v2.2 -with-singularity mutect-nf_v2.2.sif 
 nextflow run IARCbioinfo/vcf_normalization-nf -r v1.1 -with-singularity vcf_normalization-nf_v1.1.sif -params-file params-vcf_normalization-nf-organoids-somatic-mutect.yml --output_folder mutect2_somatic_organoids_normalized
 nextflow run IARCbioinfo/table_annovar-nf -r v1.1 -with-singularity table_annovar-nf_v1.1.sif -params-file params-table_annovar-nf-organoids-mutect.yml --output_folder mutect2_somatic_organoids_normalized_annotated 
 ```
+where params-mutect2-nf.yml contains the parameters of the pipeline (ref: location of reference hs38DH.fa, known_snp: location of Mutect2 bundle file af-only-gnomad.hg38.vcf.gz, snp_contam: location of Mutect2 bundle file small_exac_common_3.hg38.vcf.gz, 
+tn_file: location of tsv file with tumor and normal bam file locations, estimate_contamination: true, filter_readorientation: false). params-vcf_normalization-nf-organoids-somatic-mutect.yml contain the parameters of the normalization step (ref: location of hs38DH.fa, vcf_ext: extension of VCF files), and (table_extension: vcf.gz, annovar_db: location of annovar database folder, annovar_params: '--codingarg -includesnp -protocol ensGene,exac03nontcga,esp6500siv2_all,1000g2015aug_all,gnomad30_genome,gnomad211_genome,gnomad211_exome,clinvar_20200316,revel,dbnsfp35c,dbnsfp31a_interpro,intervar_20180118,cosmic92_coding,cosmic92_noncoding,avsnp150,phastConsElements100way,wgRna -operation g,f,f,f,f,f,f,f,f,f,f,f,f,f,f,r,r -otherinfo' ).
 
 ##### Copy Number Variant calling
 Copy number variant calling with pipeline [iarcbioinfo/purple-nf](https://github.com/IARCbioinfo/purple-nf/tree/dev_multi-sample) branch dev_multi-sample, using the same genome reference as for the mapping step:
 ```
-nextflow run iarcbioinfo/purple-nf -r  --tn_file input_purple-nf-multisample-vcf.tsv --cohort_dir / --ref references/hs38DH/hs38DH.fa --ref_dict references/hs38DH/hs38DH.dict --output_folder PURPLE_multisample_organoids --multisample_seg
+nextflow run iarcbioinfo/purple-nf -r dev_multi-sample --tn_file input_purple-nf-multisample-vcf.tsv --cohort_dir / --ref references/hs38DH/hs38DH.fa --ref_dict references/hs38DH/hs38DH.dict --output_folder PURPLE_multisample_organoids --multisample_seg
 ```
 
 ##### Structural variant calling
@@ -50,6 +51,7 @@ Structural variant calling with pipeline [IARCbioinfo/sv_somatic_cns]() release 
 ```
 nextflow run iarcbioinfo/sv_somatic_cns -r v1.0 -with-singularity sv_somatic_cns_v1.0.sif -params-file params-sv-somatic-cnv-nf.yml
 ```
+where params-sv-somatic-cnv-nf.yml contains the parameters of the pipeline (ref: location of hs38DH.fa, input_folder, tn_file: location of tsv file with tumor normal bam files, all_sv_cns: true).
 
 ## Data
 The data folder contains tab-separated files with processed data:
