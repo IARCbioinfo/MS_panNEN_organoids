@@ -7,10 +7,28 @@ We provide here the command lines used to process the RNA-sequencing and whole-g
 ### RNA-seq
 
 #### Step 1: mapping
+We first map raw reads to the reference genome using pipeline IARCbioinfo/RNAseq-nf:
+```
+ nextflow run iarcbioinfo/RNAseq-nf -r v2.3 -with-singularity RNAseq-nf_v2.3.sif --output_folder RNAseq-nf_organoids -params-file params-RNAseq-nf.yml
+```
+
 
 #### Step 2: post-processing
+We then do local realignment using pipeline abra-nf:
+```
+nextflow run iarcbioinfo/abra-nf -r v3.0 -with-singularity abra-nf_v3.0.sif --output_folder RNAseq-nf_organoids_abra  -params-file params-2-abra-nf.yml
+```
+
+We finally perform base quality score recalibration using pipeline BQSR-nf:
+```
+ nextflow run iarcbioinfo/BQSR-nf -r v1.1 -with-singularity BQSR-nf_v1.1.sif --output_folder RNAseq-nf_organoids_abra_BQSR -params-file params-bqsr-nf.yml
+ ```
 
 #### Step 3: expression quantification
+
+```
+nextflow run iarcbioinfo/RNAseq-transcript-nf -r v2.2 -with-singularity RNAseq-transcript-nf_v2.2.sif --output_folder RNAseq-nf_1pass_organoids_abra_BQSR -params-file params-4-RNAseq-transcript-nf.yml 
+ ```
 
 ### WGS
 
