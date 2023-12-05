@@ -7,10 +7,11 @@ We provide here the command lines used to process the RNA-sequencing and whole-g
 ### RNA-seq
 
 #### Step 1: mapping
-We first map raw reads to the reference genome using pipeline IARCbioinfo/RNAseq-nf:
+We first map raw reads to the reference genome GRCh38 with annotation gencode v33 (CTAT library of April 062020, plug-n-play versions available at https://data.broadinstitute.org/Trinity/CTAT_RESOURCE_LIB/) using pipeline [IARCbioinfo/RNAseq-nf](https://github.com/IARCbioinfo/RNAseq-nf):
 ```
  nextflow run iarcbioinfo/RNAseq-nf -r v2.3 -with-singularity RNAseq-nf_v2.3.sif --output_folder RNAseq-nf_organoids -params-file params-RNAseq-nf.yml
 ```
+where params-RNAseq-nf.yml contains the location of the reference genome file ref_genome.fa from the CTAT library (parameter ref), the location of the folder with the corresponding STAR index (parameter ref_folder), the location of the gencode v33 gtf file ref_annot.gtf from the CTAT library (parameter gtf), the location of a bed file with transcript locations (parameter bed) used by RSeQC, the location of lists of known snps (dbsnp_146.hg38.vcf.gz) and indels (Mills_and_1000G_gold_standard.indels.hg38.vcf.gz) from the GATK bundle used during the base quality score recalibration step (parameters snp_vcf and indel_vcf), the mapping quality to be used by STAR for uniquely mapped reads (parameter STAR_mapqUnique: 60), and the reads trimming with cutadapt option enabled (parameter cutadapt: true).
 
 
 #### Step 2: post-processing
