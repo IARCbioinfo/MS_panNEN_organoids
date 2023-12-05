@@ -25,13 +25,14 @@ We finally perform base quality score recalibration using pipeline BQSR-nf:
 ```
  nextflow run iarcbioinfo/BQSR-nf -r v1.1 -with-singularity BQSR-nf_v1.1.sif --output_folder RNAseq-nf_organoids_abra_BQSR -params-file params-bqsr-nf.yml
  ```
-where parameters-bqsr-nf.yml contain the location of the bam files (parameter input_folder), the location of the CTAT reference genome (parameter ref), and the location of lists of known snps (dbsnp_146.hg38.vcf.gz) and indels (Mills_and_1000G_gold_standard.indels.hg38.vcf.gz) from the GATK bundle (parameters snp_vcf and indel_vcf).
+where parameters-bqsr-nf.yml contains the location of the bam files (parameter input_folder), the location of the CTAT reference genome (parameter ref), and the location of lists of known snps (dbsnp_146.hg38.vcf.gz) and indels (Mills_and_1000G_gold_standard.indels.hg38.vcf.gz) from the GATK bundle (parameters snp_vcf and indel_vcf).
 
 #### Step 3: expression quantification
-
+We finally performed gene and transcript expression quantification with software StringTie using  pipeline [RNAseq-transcript-nf](https://github.com/IARCbioinfo/RNAseq-transcript-nf):
 ```
-nextflow run iarcbioinfo/RNAseq-transcript-nf -r v2.2 -with-singularity RNAseq-transcript-nf_v2.2.sif --output_folder RNAseq-nf_1pass_organoids_abra_BQSR -params-file params-4-RNAseq-transcript-nf.yml 
+nextflow run iarcbioinfo/RNAseq-transcript-nf -r v2.2 -with-singularity RNAseq-transcript-nf_v2.2.sif --output_folder RNAseq-nf_1pass_organoids_abra_BQSR -params-file params-RNAseq-transcript-nf.yml 
  ```
+where params-RNAseq-transcript-nf.yml contains the location of the with columns ID (sample ID), bam (location of the bam file), and readlength (mean read length after trimming step) (parameter input_file), the location of the reference genome and gencode annotation (parameters ref and gtf, same values as for the upstream steps) , and metainformation about the mapping (parameters annot_genome: hg38, annot_provider: Gencode, annot_version: v33).
 
 ### WGS
 
