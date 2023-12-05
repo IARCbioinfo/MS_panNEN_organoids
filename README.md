@@ -7,7 +7,7 @@ We provide here the command lines used to process the RNA-sequencing and whole-g
 ### RNA-seq
 
 #### Step 1: mapping
-We first map raw reads to the reference genome GRCh38 with annotation gencode v33 (CTAT library of April 062020, plug-n-play versions available at https://data.broadinstitute.org/Trinity/CTAT_RESOURCE_LIB/) using pipeline [IARCbioinfo/RNAseq-nf](https://github.com/IARCbioinfo/RNAseq-nf):
+We first map raw reads to the reference genome GRCh38 with annotation gencode v33 (CTAT library of April 062020, plug-n-play versions available at https://data.broadinstitute.org/Trinity/CTAT_RESOURCE_LIB/) using pipeline [IARCbioinfo/RNAseq-nf](https://github.com/IARCbioinfo/RNAseq-nf) version v2.3 and its [singularity image](https://datasets.datalad.org/?dir=/shub/IARCbioinfo/RNAseq-nf) :
 ```
  nextflow run iarcbioinfo/RNAseq-nf -r v2.3 -with-singularity RNAseq-nf_v2.3.sif --output_folder RNAseq-nf_organoids -params-file params-RNAseq-nf.yml
 ```
@@ -15,20 +15,20 @@ where params-RNAseq-nf.yml contains the location of the reference genome file re
 
 
 #### Step 2: post-processing
-We then do local realignment using pipeline [abra-nf](https://github.com/IARCbioinfo/abra-nf):
+We then do local realignment using pipeline [abra-nf](https://github.com/IARCbioinfo/abra-nf) version v3.0 and its [singularity image](https://datasets.datalad.org/?dir=/shub/IARCbioinfo/abra-nf):
 ```
 nextflow run iarcbioinfo/abra-nf -r v3.0 -with-singularity abra-nf_v3.0.sif --output_folder RNAseq-nf_organoids_abra  -params-file params-abra-nf.yml
 ```
 where params-abra-nf.yml contains the location of the bam files (parameter bam_folder), the location of the same reference and annotation used for mapping with STAR (from the CTAT library; parameters ref and gtf), and junction and RNA modes enabled (parameters junctions: true and rna: true).
 
-We finally perform base quality score recalibration using pipeline BQSR-nf:
+We finally perform base quality score recalibration using pipeline [BQSR-nf](https://github.com/IARCbioinfo/BQSR-nf) version v1.1 and its [singularity image](https://datasets.datalad.org/?dir=/shub/IARCbioinfo/BQSR-nf):
 ```
  nextflow run iarcbioinfo/BQSR-nf -r v1.1 -with-singularity BQSR-nf_v1.1.sif --output_folder RNAseq-nf_organoids_abra_BQSR -params-file params-bqsr-nf.yml
  ```
 where parameters-bqsr-nf.yml contains the location of the bam files (parameter input_folder), the location of the CTAT reference genome (parameter ref), and the location of lists of known snps (dbsnp_146.hg38.vcf.gz) and indels (Mills_and_1000G_gold_standard.indels.hg38.vcf.gz) from the GATK bundle (parameters snp_vcf and indel_vcf).
 
 #### Step 3: expression quantification
-We finally performed gene and transcript expression quantification with software StringTie using  pipeline [RNAseq-transcript-nf](https://github.com/IARCbioinfo/RNAseq-transcript-nf):
+We finally performed gene and transcript expression quantification with software StringTie using  pipeline [RNAseq-transcript-nf](https://github.com/IARCbioinfo/RNAseq-transcript-nf) version v2.2 and its [singularity image](https://datasets.datalad.org/?dir=/shub/IARCbioinfo/RNAseq-transcript-nf):
 ```
 nextflow run iarcbioinfo/RNAseq-transcript-nf -r v2.2 -with-singularity RNAseq-transcript-nf_v2.2.sif --output_folder RNAseq-nf_1pass_organoids_abra_BQSR -params-file params-RNAseq-transcript-nf.yml 
  ```
