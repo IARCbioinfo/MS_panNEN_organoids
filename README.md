@@ -77,9 +77,9 @@ where params-sv-somatic-cnv-nf.yml contains the parameters of the pipeline (ref:
 
 ## Data
 The data folder contains tab-separated files with processed data:
-- *gene_expression_PDTOs_parents.tsv* contains the final gene expression matrix, with read counts for the 59607 features and 47 samples sequenced in the Dayton et al. study
-- *gene_expression_PDTOs_parents.tsv* contains the annotation of the 59607 features (gene name, ensembl ID, protein ID, gene type, etc)
-- *small_variants_WGS_PDTOs_parents.tsv* contains the somatic variants called from WGS from Table S4 of Dayton et al. 2023
+- *gene_expression_PDTOs_parents.tsv* contains the final gene expression matrix, with read counts for the 59607 features (genes from the gencode v33) and 47 samples sequenced in the Dayton et al. study, obtained from StringTie using the processing steps detailed above
+- *gene_expression_PDTOs_parents.tsv* contains the annotation of the 59607 features (gene name, ensembl ID, protein ID, gene type, etc; from the gencode v33 annotation)
+- *small_variants_WGS_PDTOs_parents.tsv* contains the somatic variants called from WGS from Table S4 of Dayton et al. 2023, obtained using the processing steps detailed above
 - *small_variants_drivers_RNAseq_PDTOs_parents.tsv* contains the somatic variants in driver genes called from RNA-seq from Table S4 of Dayton et al. 2023
 
 ## Rscripts
