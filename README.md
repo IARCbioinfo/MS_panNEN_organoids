@@ -11,19 +11,21 @@ We first map raw reads to the reference genome GRCh38 with annotation gencode v3
 ```
  nextflow run iarcbioinfo/RNAseq-nf -r v2.3 -with-singularity RNAseq-nf_v2.3.sif --output_folder RNAseq-nf_organoids -params-file params-RNAseq-nf.yml
 ```
-where params-RNAseq-nf.yml contains the location of the reference genome file ref_genome.fa from the CTAT library (parameter ref), the location of the folder with the corresponding STAR index (parameter ref_folder), the location of the gencode v33 gtf file ref_annot.gtf from the CTAT library (parameter gtf), the location of a bed file with transcript locations (parameter bed) used by RSeQC, the location of lists of known snps (dbsnp_146.hg38.vcf.gz) and indels (Mills_and_1000G_gold_standard.indels.hg38.vcf.gz) from the GATK bundle used during the base quality score recalibration step (parameters snp_vcf and indel_vcf), the mapping quality to be used by STAR for uniquely mapped reads (parameter STAR_mapqUnique: 60), and the reads trimming with cutadapt option enabled (parameter cutadapt: true).
+where params-RNAseq-nf.yml contains the location of the reference genome file ref_genome.fa from the CTAT library (parameter ref), the location of the folder with the corresponding STAR index (parameter ref_folder), the location of the gencode v33 gtf file ref_annot.gtf from the CTAT library (parameter gtf), the location of a bed file with transcript locations (parameter bed) used by RSeQC, the mapping quality to be used by STAR for uniquely mapped reads (parameter STAR_mapqUnique: 60), and the reads trimming with cutadapt option enabled (parameter cutadapt: true).
 
 
 #### Step 2: post-processing
-We then do local realignment using pipeline abra-nf:
+We then do local realignment using pipeline [abra-nf](https://github.com/IARCbioinfo/abra-nf):
 ```
-nextflow run iarcbioinfo/abra-nf -r v3.0 -with-singularity abra-nf_v3.0.sif --output_folder RNAseq-nf_organoids_abra  -params-file params-2-abra-nf.yml
+nextflow run iarcbioinfo/abra-nf -r v3.0 -with-singularity abra-nf_v3.0.sif --output_folder RNAseq-nf_organoids_abra  -params-file params-abra-nf.yml
 ```
+where params-abra-nf.yml contains the location of the bam files (parameter bam_folder), the location of the same reference and annotation used for mapping with STAR (from the CTAT library; parameters ref and gtf), and junction and RNA modes enabled (parameters junctions: true and rna: true).
 
 We finally perform base quality score recalibration using pipeline BQSR-nf:
 ```
  nextflow run iarcbioinfo/BQSR-nf -r v1.1 -with-singularity BQSR-nf_v1.1.sif --output_folder RNAseq-nf_organoids_abra_BQSR -params-file params-bqsr-nf.yml
  ```
+where parameters-bqsr-nf.yml contain the location of the bam files (parameter input_folder), the location of the CTAT reference genome (parameter ref), and the location of lists of known snps (dbsnp_146.hg38.vcf.gz) and indels (Mills_and_1000G_gold_standard.indels.hg38.vcf.gz) from the GATK bundle (parameters snp_vcf and indel_vcf).
 
 #### Step 3: expression quantification
 
