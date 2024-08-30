@@ -1,5 +1,5 @@
 # PanNEN manuscript scripts
-This repository contains the data and scripts used to produce the genomic Figures in the panNEN organoids manuscript Dayton et al. (In press; https://www.biorxiv.org/content/10.1101/2022.10.31.514549v1) and its associated data note Alcala et al. biorxiv (2023; https://www.biorxiv.org/content/10.1101/2023.08.31.555732v1).
+This repository contains the data and scripts used to produce the genomic Figures in the panNEN organoids manuscript Dayton et al. Cancer Cell (2023; https://www.sciencedirect.com/science/article/pii/S1535610823003987) and its associated data note Alcala et al. GigaScience (2024; https://academic.oup.com/gigascience/article/doi/10.1093/gigascience/giae008/7623700).
 
 ## Data pre-processing
 We provide here the command lines used to process the RNA-sequencing and whole-genome sequencing (WGS) data. All processing was performed using the Nextflow pipelines freely available on the github account of the bioinformatics platform of the international agency for research on cancer (https://github.com/IARCbioinfo).
@@ -163,7 +163,7 @@ Produces ROC curve, confusion matrices, and feature importance metrics in Figure
 
 
 ## Citations
-Dayton*, Alcala, ... , Foll, Fernandez-Cuesta*, Clevers*. Druggable Growth Dependencies and Tumor Evolution Analysis in Patient-Derived Organoids of Neuroendocrine Cancer. biorxiv 2022. doi: https://doi.org/10.1101/2022.10.31.514549
+Dayton*, Alcala, ... , Foll, Fernandez-Cuesta*, Clevers*. Druggable Growth Dependencies and Tumor Evolution Analysis in Patient-Derived Organoids of Neuroendocrine Cancer. Cancer Cell 2023. doi: https://doi.org/10.1016/j.ccell.2023.11.007
 
-Alcala*, Voegele, ..., Dayton, Foll*. Multi-omic dataset of patient-derived tumor organoids of neuroendocrine neoplasms. biorxiv 2023. doi: https://doi.org/10.1101/2023.08.31.555732
+Alcala*, Voegele, ..., Dayton, Foll*. Multi-omic dataset of patient-derived tumor organoids of neuroendocrine neoplasms. GigaScience 2024. doi: https://doi.org/10.1093/gigascience/giae008
 
