@@ -21,7 +21,7 @@ nextflow run iarcbioinfo/abra-nf -r v3.0 -with-singularity abra-nf_v3.0.sif --ou
 ```
 where params-abra-nf.yml contains the location of the bam files (parameter bam_folder), the location of the same reference and annotation used for mapping with STAR (from the CTAT library; parameters ref and gtf), and junction and RNA modes enabled (parameters junctions: true and rna: true).
 
-We finally perform base quality score recalibration using pipeline [BQSR-nf](https://github.com/IARCbioinfo/BQSR-nf) version v1.1 and its [singularity image](https://datasets.datalad.org/?dir=/shub/IARCbioinfo/BQSR-nf):
+We finally perform base quality score recalibration using pipeline [BQSR-nf](https://github.com/IARCbioinfo/BQSR-nf) version v1.1 and its [singularity image](https://datasets.datal.org/?dir=/shub/IARCbioinfo/BQSR-nf):
 ```
  nextflow run iarcbioinfo/BQSR-nf -r v1.1 -with-singularity BQSR-nf_v1.1.sif --output_folder RNAseq-nf_organoids_abra_BQSR -params-file params-bqsr-nf.yml
  ```
@@ -81,6 +81,16 @@ The data folder contains tab-separated files with processed data:
 - *gene_expression_PDTOs_parents.tsv* contains the annotation of the 59607 features (gene name, ensembl ID, protein ID, gene type, etc; from the gencode v33 annotation)
 - *small_variants_WGS_PDTOs_parents.tsv* contains the somatic variants called from WGS from Table S4 of Dayton et al. 2023, obtained using the processing steps detailed above
 - *small_variants_drivers_RNAseq_PDTOs_parents.tsv* contains the somatic variants in driver genes called from RNA-seq from Table S4 of Dayton et al. 2023
+
+In addition, the subfolder small_variants_CCFs contains data to reproduce the joint CCF plots from Dayton et al. Fig. S5A. For each of the 10 experiments with WGS data, a tsv file samplename_annotatedvariants_CCF_clonality.tsv contains 26 columns.
+- variant information: chr (chromosome),	pos (start position), End (end position),	Ref (reference/ancestral allele),	Alt (alternative/derived allele)
+- clonality information (from software DPClust): Cluster (cancer subclone assignment),	Clonal	(whether the variant is clonal or subclonal), best.assignment.likelihoods	all.assignment.likelihoods.1	all.assignment.likelihoods.2	all.assignment.likelihoods.3	allSameCN (DPClust QC for the subclonal cluster assignment)
+- the cancer cell fractions (similar to site frequency data): subclonal.fractions.sample1	subclonal.fractions.sample2, etc
+- variant annotations:	Func.ensGene,	Gene.ensGene,	GeneDetail.ensGene,	ExonicFunc.ensGene,	AAChange.ensGene,	REVEL	(revel score)
+- variant calling and alignment information: DP.sample1	DP.sample2 (sequencing depth at variant location), AD	DP	VAF (number of alternative and total reads at variant location and variant allelic fraction)
+- Sample: the sample name
+![image](https://github.com/user-attachments/assets/6ed2d811-bc29-43a4-bb8f-dc8c4c2ec3e6)
+
 
 ## Rscripts
 The Rscripts folder contains markdown files detailing R commands used to produce the figures. Major package dependencies are mentioned below; see a list of all dependencies at the beginning of each script.
