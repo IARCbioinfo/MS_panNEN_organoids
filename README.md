@@ -82,6 +82,16 @@ The data folder contains tab-separated files with processed data:
 - *small_variants_WGS_PDTOs_parents.tsv* contains the somatic variants called from WGS from Table S4 of Dayton et al. 2023, obtained using the processing steps detailed above
 - *small_variants_drivers_RNAseq_PDTOs_parents.tsv* contains the somatic variants in driver genes called from RNA-seq from Table S4 of Dayton et al. 2023
 
+In addition, the subfolder small_variants_CCFs contains data to reproduce the joint CCF plots from Dayton et al. Fig. S5A. For each of the 10 experiments with WGS data, a tsv file samplename_annotatedvariants_CCF_clonality.tsv contains 26 columns.
+- variant information: chr (chromosome),	pos (start position), End (end position),	Ref (reference/ancestral allele),	Alt (alternative/derived allele)
+- clonality information (from software DPClust): Cluster (cancer subclone assignment),	Clonal	(whether the variant is clonal or subclonal), best.assignment.likelihoods	all.assignment.likelihoods.1	all.assignment.likelihoods.2	all.assignment.likelihoods.3	allSameCN (DPClust QC for the subclonal cluster assignment)
+- the cancer cell fractions (similar to site frequency data): subclonal.fractions.sample1	subclonal.fractions.sample2, etc
+- variant annotations:	Func.ensGene,	Gene.ensGene,	GeneDetail.ensGene,	ExonicFunc.ensGene,	AAChange.ensGene,	REVEL	(revel score)
+- variant calling and alignment information: DP.LNET6T	DP.LNET6Tp1 (sequencing depth at variant location), AD	DP	VAF (number of reads and variant fraction at location)
+- Sample: the sample name
+![image](https://github.com/user-attachments/assets/6ed2d811-bc29-43a4-bb8f-dc8c4c2ec3e6)
+
+
 ## Rscripts
 The Rscripts folder contains markdown files detailing R commands used to produce the figures. Major package dependencies are mentioned below; see a list of all dependencies at the beginning of each script.
 
