@@ -21,7 +21,7 @@ nextflow run iarcbioinfo/abra-nf -r v3.0 -with-singularity abra-nf_v3.0.sif --ou
 ```
 where params-abra-nf.yml contains the location of the bam files (parameter bam_folder), the location of the same reference and annotation used for mapping with STAR (from the CTAT library; parameters ref and gtf), and junction and RNA modes enabled (parameters junctions: true and rna: true).
 
-We finally perform base quality score recalibration using pipeline [BQSR-nf](https://github.com/IARCbioinfo/BQSR-nf) version v1.1 and its [singularity image](https://datasets.datalad.org/?dir=/shub/IARCbioinfo/BQSR-nf):
+We finally perform base quality score recalibration using pipeline [BQSR-nf](https://github.com/IARCbioinfo/BQSR-nf) version v1.1 and its [singularity image](https://datasets.datal.org/?dir=/shub/IARCbioinfo/BQSR-nf):
 ```
  nextflow run iarcbioinfo/BQSR-nf -r v1.1 -with-singularity BQSR-nf_v1.1.sif --output_folder RNAseq-nf_organoids_abra_BQSR -params-file params-bqsr-nf.yml
  ```
@@ -87,7 +87,7 @@ In addition, the subfolder small_variants_CCFs contains data to reproduce the jo
 - clonality information (from software DPClust): Cluster (cancer subclone assignment),	Clonal	(whether the variant is clonal or subclonal), best.assignment.likelihoods	all.assignment.likelihoods.1	all.assignment.likelihoods.2	all.assignment.likelihoods.3	allSameCN (DPClust QC for the subclonal cluster assignment)
 - the cancer cell fractions (similar to site frequency data): subclonal.fractions.sample1	subclonal.fractions.sample2, etc
 - variant annotations:	Func.ensGene,	Gene.ensGene,	GeneDetail.ensGene,	ExonicFunc.ensGene,	AAChange.ensGene,	REVEL	(revel score)
-- variant calling and alignment information: DP.LNET6T	DP.LNET6Tp1 (sequencing depth at variant location), AD	DP	VAF (number of reads and variant fraction at location)
+- variant calling and alignment information: DP.LNET6T	DP.LNET6Tp1 (sequencing depth at variant location), AD	DP	VAF (number of alternative and total reads at variant location and variant allelic fraction)
 - Sample: the sample name
 ![image](https://github.com/user-attachments/assets/6ed2d811-bc29-43a4-bb8f-dc8c4c2ec3e6)
 
